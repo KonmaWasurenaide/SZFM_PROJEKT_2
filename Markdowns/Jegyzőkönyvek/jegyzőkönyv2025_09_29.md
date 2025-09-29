@@ -24,3 +24,8 @@ Tárgy: Nagy projekt megbeszélése
 
 ### Tapasztalatok:
 - még nincs
+
+
+### Webes megbeszélés
+- local database java backenden
+- figmában megtervezi és utána dolgozk Arti a weboldal kezdőlapján

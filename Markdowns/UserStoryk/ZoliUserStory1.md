@@ -1,0 +1,3 @@
+| Cím | UserStory | Elfogadási kritérium|Prioritás|
+|-----|-----------|---------------------|---------|
+|Mozgás| Játékosként azt szeretném, hogy tudjak mozogni az autóval úgy mint élőben, azért hogy el tudjak menekülni a kergető autók elől| Ha lenyomom a W akkor az autó előre megy, ha lenyomom az A akkor az autó balra kanyarodik, ha lenyomom a D akkor az autó jobbra kanyarodik, ha lenyomom az S akkor az autó tolat. Továbbá az autó ne tudjnon egy helyben forogni|Sprint 1|

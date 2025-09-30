@@ -30,7 +30,7 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         rb = gameObject.GetComponent<Rigidbody>();
-        rb.centerOfMass = new Vector3(0, -0.5f, 0.3f);
+        rb.centerOfMass = new Vector3(0, -0.7f, 0.2f);
     }
 
     private void Update()
@@ -53,7 +53,19 @@ public class PlayerController : MonoBehaviour
         frontLeftWheelCollider.motorTorque = verticalInput * motorForce;
         frontRightWheelCollider.motorTorque = verticalInput * motorForce;
 
-        currentBrakeForce = isBreaking ? brakeForce : 0f;
+
+        if(Mathf.Abs(verticalInput) < 0.5f && !isBreaking)
+        {
+            currentBrakeForce = brakeForce * 0.3f;
+        }
+        else
+        {
+            currentBrakeForce = isBreaking ? brakeForce : 0f;
+        }
+        /*backRightWheelCollider.motorTorque = verticalInput * motorForce; // 4x4 
+        backLeftWheelCollider.motorTorque = verticalInput * motorForce;*/
+
+        
         ApplyBreaking();
     }
 

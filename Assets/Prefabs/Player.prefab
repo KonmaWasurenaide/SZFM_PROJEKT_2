@@ -629,8 +629,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69751167099a80b45900e1358c2c0f89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  motorForce: 3000
-  brakeForce: 5000
+  motorForce: 6000
+  brakeForce: 8000
   maxSteerAngle: 30
   frontLeftWheelCollider: {fileID: 255351278642561654}
   backLeftWheelCollider: {fileID: 2057409872902493004}
@@ -669,8 +669,8 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6349899910550361731}
   serializedVersion: 4
-  m_Mass: 1400
-  m_Drag: 0.05
+  m_Mass: 800
+  m_Drag: 0.1
   m_AngularDrag: 0.5
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -686,7 +686,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 1
-  m_Constraints: 64
+  m_Constraints: 0
   m_CollisionDetection: 1
 --- !u!1 &7186941341493243504
 GameObject:

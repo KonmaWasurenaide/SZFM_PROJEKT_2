@@ -2,13 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PlayerController : MonoBehaviour
 {
 
     [SerializeField] float motorForce = 100f;
     [SerializeField] float brakeForce = 1000f;
-    [SerializeField] float maxSteerAngle = 30f;
+    [SerializeField] float handBrakeForce = 100000f;
+    //[SerializeField] float maxSteerAngle = 30f;
 
     public WheelCollider frontLeftWheelCollider;
     public WheelCollider backLeftWheelCollider;
@@ -23,9 +25,21 @@ public class PlayerController : MonoBehaviour
     private float horizontalInput;
     private float verticalInput;
     private float currentSteerAngle;
-    private float currentBrakeForce;
-    private bool isBreaking;
+    //private float currentBrakeForce;
+    private bool handBrake;
     private Rigidbody rb;
+
+
+
+    [SerializeField] AnimationCurve steeringCurve;
+    
+    private float speed;
+
+
+    [SerializeField] float slipAngle;
+    [SerializeField] float backSlipAngle;
+    [SerializeField] float brakeInput;
+    [SerializeField] bool isBraking;
 
     private void Start()
     {
@@ -35,51 +49,103 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        speed = rb.velocity.magnitude;
         GetInput();
         HandleMotor();
         HandleSteering();
         UpdateWheels();
+        ApplyBreaking();
+        ApplyHandBreak();
+        Debug.Log(rb.velocity);
     }
 
     private void GetInput()
     {
         horizontalInput =Input.GetAxis("Horizontal");
         verticalInput = Input.GetAxis("Vertical");
-        isBreaking = Input.GetKey(KeyCode.Space);
+        handBrake = Input.GetKey(KeyCode.Space);
+        slipAngle = Vector3.Angle(transform.forward, rb.velocity - transform.forward);
+        backSlipAngle = Vector3.Angle(-transform.forward, rb.velocity + transform.forward);
+        if (slipAngle < 120f)
+        {
+            if (verticalInput < 0)
+            {
+                brakeInput = Mathf.Abs(verticalInput);
+                isBraking = true;
+            }
+            else
+            {
+                brakeInput = 0;
+                isBraking = false;
+            }
+        }
+        else if (backSlipAngle < 120f)
+        {
+            if (verticalInput > 0)
+            {
+                brakeInput = Mathf.Abs(verticalInput);
+
+                isBraking = true;
+            }
+            else
+            {
+                brakeInput = 0;
+                isBraking = false;
+            }
+        }
+        else
+        {
+            brakeInput = 0;
+            isBraking = false;
+        }
+
     }
+
+
 
     private void HandleMotor()
     {
         frontLeftWheelCollider.motorTorque = verticalInput * motorForce;
         frontRightWheelCollider.motorTorque = verticalInput * motorForce;
 
+        
 
-        if(Mathf.Abs(verticalInput) < 0.5f && !isBreaking)
+
+    }
+
+    private void ApplyHandBreak()
+    {
+        if (handBrake)
         {
-            currentBrakeForce = brakeForce * 0.3f;
+            
+            backLeftWheelCollider.brakeTorque = handBrakeForce*0.7f;
+            backRightWheelCollider.brakeTorque = handBrakeForce * 0.7f;
+            frontRightWheelCollider.brakeTorque = handBrakeForce * 0.1f;
+            frontLeftWheelCollider.brakeTorque = handBrakeForce * 0.1f;
+            isBraking = true;
         }
         else
         {
-            currentBrakeForce = isBreaking ? brakeForce : 0f;
+            isBraking = false;
         }
-        /*backRightWheelCollider.motorTorque = verticalInput * motorForce; // 4x4 
-        backLeftWheelCollider.motorTorque = verticalInput * motorForce;*/
-
-        
-        ApplyBreaking();
     }
+
+
+   
 
     private void ApplyBreaking()
     {
-        frontRightWheelCollider.brakeTorque = currentBrakeForce;
-        frontLeftWheelCollider.brakeTorque = currentBrakeForce;
-        backLeftWheelCollider.brakeTorque = currentBrakeForce;
-        backRightWheelCollider.brakeTorque = currentBrakeForce;
+        frontRightWheelCollider.brakeTorque = brakeInput * brakeForce * 0.7f;
+        frontLeftWheelCollider.brakeTorque = brakeInput * brakeForce * 0.7f;
+        backLeftWheelCollider.brakeTorque = brakeInput * brakeForce * 0.3f;
+        backRightWheelCollider.brakeTorque = brakeInput * brakeForce * 0.3f;
     }
 
     private void HandleSteering()
     {
-        currentSteerAngle = maxSteerAngle * horizontalInput;
+
+
+        currentSteerAngle = horizontalInput* steeringCurve.Evaluate(speed);
         frontLeftWheelCollider.steerAngle = currentSteerAngle;
         frontRightWheelCollider.steerAngle = currentSteerAngle;
     }

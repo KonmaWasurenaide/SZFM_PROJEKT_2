@@ -138,13 +138,13 @@ WheelCollider:
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.8
     m_AsymptoteValue: 0.5
-    m_Stiffness: 2.5
+    m_Stiffness: 1.2
   m_SidewaysFriction:
-    m_ExtremumSlip: 0.4
+    m_ExtremumSlip: 1
     m_ExtremumValue: 1
-    m_AsymptoteSlip: 0.8
+    m_AsymptoteSlip: 0.6
     m_AsymptoteValue: 0.5
-    m_Stiffness: 1.5
+    m_Stiffness: 2
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -205,17 +205,17 @@ WheelCollider:
   m_Mass: 30
   m_WheelDampingRate: 0.3
   m_ForwardFriction:
-    m_ExtremumSlip: 0.4
-    m_ExtremumValue: 1
-    m_AsymptoteSlip: 0.8
-    m_AsymptoteValue: 0.5
-    m_Stiffness: 2.5
+    m_ExtremumSlip: 0.35
+    m_ExtremumValue: 1.1
+    m_AsymptoteSlip: 0.7
+    m_AsymptoteValue: 0.6
+    m_Stiffness: 1.4
   m_SidewaysFriction:
-    m_ExtremumSlip: 0.4
-    m_ExtremumValue: 1
-    m_AsymptoteSlip: 0.8
-    m_AsymptoteValue: 0.5
-    m_Stiffness: 3
+    m_ExtremumSlip: 1
+    m_ExtremumValue: 0.9
+    m_AsymptoteSlip: 0.5
+    m_AsymptoteValue: 0.4
+    m_Stiffness: 2
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -359,17 +359,17 @@ WheelCollider:
   m_Mass: 30
   m_WheelDampingRate: 0.3
   m_ForwardFriction:
-    m_ExtremumSlip: 0.4
-    m_ExtremumValue: 1
-    m_AsymptoteSlip: 0.8
-    m_AsymptoteValue: 0.5
-    m_Stiffness: 2.5
+    m_ExtremumSlip: 0.35
+    m_ExtremumValue: 1.1
+    m_AsymptoteSlip: 0.7
+    m_AsymptoteValue: 0.6
+    m_Stiffness: 1.4
   m_SidewaysFriction:
-    m_ExtremumSlip: 0.4
-    m_ExtremumValue: 1
-    m_AsymptoteSlip: 0.8
-    m_AsymptoteValue: 0.5
-    m_Stiffness: 3
+    m_ExtremumSlip: 1
+    m_ExtremumValue: 0.9
+    m_AsymptoteSlip: 0.5
+    m_AsymptoteValue: 0.4
+    m_Stiffness: 2
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -629,9 +629,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69751167099a80b45900e1358c2c0f89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  motorForce: 3000
-  brakeForce: 5000
+  motorForce: 6000
+  brakeForce: 50000
   handBrakeForce: 100000
+  maxMotorTorque: 5
   frontLeftWheelCollider: {fileID: 255351278642561654}
   backLeftWheelCollider: {fileID: 2057409872902493004}
   frontRightWheelCollider: {fileID: 219492199038904535}
@@ -646,12 +647,12 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 3.8562737
       value: 50.313026
-      inSlope: 0
-      outSlope: 0
+      inSlope: 0.03188934
+      outSlope: 0.03188934
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0
+      outWeight: 0.3778837
     - serializedVersion: 3
       time: 64.76341
       value: 10.004822
@@ -771,13 +772,13 @@ WheelCollider:
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.8
     m_AsymptoteValue: 0.5
-    m_Stiffness: 2.5
+    m_Stiffness: 1.2
   m_SidewaysFriction:
-    m_ExtremumSlip: 0.4
+    m_ExtremumSlip: 1
     m_ExtremumValue: 1
-    m_AsymptoteSlip: 0.8
+    m_AsymptoteSlip: 0.6
     m_AsymptoteValue: 0.5
-    m_Stiffness: 1.5
+    m_Stiffness: 2
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0

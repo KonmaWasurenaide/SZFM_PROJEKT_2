@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float motorForce = 100f;
     [SerializeField] float brakeForce = 1000f;
     [SerializeField] float handBrakeForce = 100000f;
+    [SerializeField] float maxMotorTorque;
     //[SerializeField] float maxSteerAngle = 30f;
 
     public WheelCollider frontLeftWheelCollider;
@@ -105,8 +106,11 @@ public class PlayerController : MonoBehaviour
 
     private void HandleMotor()
     {
-        frontLeftWheelCollider.motorTorque = verticalInput * motorForce;
-        frontRightWheelCollider.motorTorque = verticalInput * motorForce;
+        
+           backLeftWheelCollider.motorTorque = verticalInput * motorForce;
+           backRightWheelCollider.motorTorque = verticalInput * motorForce;
+        
+        
 
         
 
@@ -135,10 +139,24 @@ public class PlayerController : MonoBehaviour
 
     private void ApplyBreaking()
     {
-        frontRightWheelCollider.brakeTorque = brakeInput * brakeForce * 0.7f;
-        frontLeftWheelCollider.brakeTorque = brakeInput * brakeForce * 0.7f;
-        backLeftWheelCollider.brakeTorque = brakeInput * brakeForce * 0.3f;
-        backRightWheelCollider.brakeTorque = brakeInput * brakeForce * 0.3f;
+        float totalBrakeForce = 0f;
+
+        if (isBraking)
+        {
+            // rendes fékezés inputból
+            totalBrakeForce = brakeInput * brakeForce;
+        }
+        else if (Mathf.Abs(verticalInput) < 0.1f && !handBrake)
+        {
+            // motorfék, ha nincs gáz
+            totalBrakeForce = brakeForce * 0.2f; // kb. 20% erõ
+        }
+
+
+        frontRightWheelCollider.brakeTorque = totalBrakeForce * 0.2f;
+        frontLeftWheelCollider.brakeTorque = totalBrakeForce * 0.2f;
+        backLeftWheelCollider.brakeTorque = totalBrakeForce * 0.8f;
+        backRightWheelCollider.brakeTorque = totalBrakeForce * 0.8f;
     }
 
     private void HandleSteering()

@@ -138,13 +138,13 @@ WheelCollider:
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.8
     m_AsymptoteValue: 0.5
-    m_Stiffness: 1.2
+    m_Stiffness: 3
   m_SidewaysFriction:
     m_ExtremumSlip: 1
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.6
     m_AsymptoteValue: 0.5
-    m_Stiffness: 2
+    m_Stiffness: 4.5
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -209,13 +209,13 @@ WheelCollider:
     m_ExtremumValue: 1.1
     m_AsymptoteSlip: 0.7
     m_AsymptoteValue: 0.6
-    m_Stiffness: 1.4
+    m_Stiffness: 3
   m_SidewaysFriction:
     m_ExtremumSlip: 1
     m_ExtremumValue: 0.9
     m_AsymptoteSlip: 0.5
     m_AsymptoteValue: 0.4
-    m_Stiffness: 2
+    m_Stiffness: 6
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -363,13 +363,13 @@ WheelCollider:
     m_ExtremumValue: 1.1
     m_AsymptoteSlip: 0.7
     m_AsymptoteValue: 0.6
-    m_Stiffness: 1.4
+    m_Stiffness: 3
   m_SidewaysFriction:
     m_ExtremumSlip: 1
     m_ExtremumValue: 0.9
     m_AsymptoteSlip: 0.5
     m_AsymptoteValue: 0.4
-    m_Stiffness: 2
+    m_Stiffness: 6
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -654,7 +654,7 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0.3778837
     - serializedVersion: 3
-      time: 64.76341
+      time: 80
       value: 10.004822
       inSlope: 0.004262666
       outSlope: 0.004262666
@@ -772,13 +772,13 @@ WheelCollider:
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.8
     m_AsymptoteValue: 0.5
-    m_Stiffness: 1.2
+    m_Stiffness: 3
   m_SidewaysFriction:
     m_ExtremumSlip: 1
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.6
     m_AsymptoteValue: 0.5
-    m_Stiffness: 2
+    m_Stiffness: 4.5
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0

@@ -122,10 +122,10 @@ public class PlayerController : MonoBehaviour
         if (handBrake)
         {
             
-            backLeftWheelCollider.brakeTorque = handBrakeForce*0.7f;
-            backRightWheelCollider.brakeTorque = handBrakeForce * 0.7f;
-            frontRightWheelCollider.brakeTorque = handBrakeForce * 0.1f;
-            frontLeftWheelCollider.brakeTorque = handBrakeForce * 0.1f;
+            backLeftWheelCollider.brakeTorque = handBrakeForce;
+            backRightWheelCollider.brakeTorque = handBrakeForce;
+            frontRightWheelCollider.brakeTorque = handBrakeForce;
+            frontLeftWheelCollider.brakeTorque = handBrakeForce;
             isBraking = true;
         }
         else
@@ -143,13 +143,13 @@ public class PlayerController : MonoBehaviour
 
         if (isBraking)
         {
-            // rendes fékezés inputból
+            
             totalBrakeForce = brakeInput * brakeForce;
         }
         else if (Mathf.Abs(verticalInput) < 0.1f && !handBrake)
         {
-            // motorfék, ha nincs gáz
-            totalBrakeForce = brakeForce * 0.2f; // kb. 20% erõ
+            
+            totalBrakeForce = brakeForce * 0.15f; 
         }
 
 

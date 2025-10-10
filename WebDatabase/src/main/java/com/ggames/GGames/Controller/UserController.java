@@ -2,10 +2,11 @@ package com.ggames.GGames.Controller;
 
 import com.ggames.GGames.Data.Entity.UserEntity;
 import com.ggames.GGames.Service.UserService;
-import org.springframework.web.bind.annotation.RestController;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api")
 public class UserController {
@@ -16,12 +17,24 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody UserEntity    user) {
+    public ResponseEntity<?> register(@RequestBody UserEntity user) {
         try {
-            UserEntity newUser = userService.registerUser(user.getUsername(), user.getEmail(), user.getPassword());
+            UserEntity newUser = userService.registerUser(user.getUsername(), user.getPassword());
             return ResponseEntity.ok("User registered successfully: " + newUser.getUsername());
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody UserEntity user) {
+        boolean valid = userService.validateCredentials(user.getUsername(), user.getPassword());
+        if (valid) {
+            return ResponseEntity.ok().build();
+        } else {
+            // Always return generic error to avoid leaking info
+            return ResponseEntity.status(401).body("Invalid credentials");
+        }
+    }
+
 }

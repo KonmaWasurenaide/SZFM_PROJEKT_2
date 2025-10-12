@@ -2,6 +2,8 @@
 
 ## 1. Felhasználói regisztráció
 
+### Userstory: 
+
 Mint új felhasználó, szeretném, ha lenne lehetőségem regisztrálni az oldalon, és az adataim biztonságosan tárolódjanak az adatbázisban, azért, hogy a jövőben be tudjak jelentkezni és elérjem a személyes könyvtáramat.
 
 ### Elfogadási kritérium:
@@ -10,10 +12,10 @@ Mint új felhasználó, szeretném, ha lenne lehetőségem regisztrálni az olda
 - /register végpont működik és új felhasználót tud menteni.
 - Érvénytelen adatok (pl. üres mezők, rövid jelszó, duplikált email) esetén hibaüzenet jelenik meg.
 
-## 2. Felhasználói bejelentkezés
-
 ### Prioritás:
-Második sprint
+Első sprint
+
+## 2. Felhasználói bejelentkezés
 
 ### User story:
 Mint regisztrált felhasználó, szeretnék be tudni jelentkezni az oldalon a korábban megadott adataimmal, hogy hozzáférjek a saját profilomhoz és játékkönyvtáramhoz.

@@ -10,5 +10,16 @@
 - Élvezhető Design
 - Egyszerű kevés akadállyal rendelkező városon kivüli környezet 
 ---
+
+# User Story #2
+
+| Cím: Hitbox & Colliders | Prioritás: A második sprint |
+|----------|----------|
+| **User Story:** Mint játékos, azt szeretném, hogy legyen egy müködő, precíz Hitboxxal rendelkező környezet és ellenfél, ne legyenek benne könnyen észrevehető hibák. Fontos hiszen nem a legjobb érzés, ha játék közbe bele buggol az autó a falba, vagy esetleg kiesne a pályáról. |
+---
+**Elfogadási Kritérium:**  
+- Precízen megrajzolt Collider rendszer 
+- Pálya szélén elég akadály vagy fal, ami megakadályozza a játékost a semmibe zuhanástól
+---
  
 

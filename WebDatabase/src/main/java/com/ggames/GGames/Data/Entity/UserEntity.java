@@ -19,11 +19,12 @@ public class UserEntity {
     @Column(nullable = false, unique = true)
     private String username;
 
+
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
-    private String email;
-
-    private String role = "USER";
+    public UserEntity(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
 }

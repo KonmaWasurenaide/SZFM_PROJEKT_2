@@ -36,6 +36,17 @@ public class UserController {
         }
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody UserEntity user) {
+        boolean valid = userService.validateCredentials(user.getUsername(), user.getPassword());
+        if (valid) {
+            return ResponseEntity.ok().build();
+        } else {
+            // Always return generic error to avoid leaking info
+            return ResponseEntity.status(401).body("Invalid credentials");
+        }
+    }
+
     @GetMapping("/home")
     public String home() {
         return "home";

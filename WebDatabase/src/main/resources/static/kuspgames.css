@@ -1,0 +1,97 @@
+:root{
+    --main-textcolor: #212529;
+    --background: #F8F9FA;
+    --shadow: #6c757d;
+    --box-shadow: #adb5bd;
+    --input-bg: #E9ECEF;
+    --input-brd: #ADB5BD;
+    --button-bg: #CED4DA;
+    --button-brd: #6C757D;
+    --button-hover-bg: #ADB5BD;
+}
+
+body{
+    display: flex;
+    align-items: auto;
+    flex-direction: row;
+    font-family: "Joti One", serif;
+    font-weight: 400;
+    font-style: normal;
+}
+#verticalPanel{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100vh;
+    align-items: center;
+    background-color: var(--background);
+    
+}
+#middleHorizontalPanel, #topmiddleHorizontalPanel, #botmiddleHorizontalPanel{
+    width: 100%;
+    height: 33.33%;
+    text-align: center;
+    color: var(--main-textcolor);
+    text-shadow: 2px 2px 4px var(--shadow);
+}
+#topmiddleHorizontalPanel{
+    align-content: center;
+    font-size:3.8em;
+    
+}
+#middleHorizontalPanel{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+ 
+#middleHorizontalPanel > div{
+    display: flex;
+    flex-direction: column;
+    width: 250px;
+    text-align: center; 
+    padding: .3em;
+}
+#pwContainer > *, #unContainer > *{
+    display: block;
+    margin-bottom: .2em;
+    
+}
+label {
+    padding: .4em;
+    display: block;
+    margin-bottom: 0.2em;
+    text-align: left;
+    font-size: 1em;
+    text-shadow: 2px 2px 4px 4px var(--shadow);
+}
+input {
+    background-color: var(--input-bg);
+    border: 2px solid var(--input-brd);
+    box-shadow: 3px 3px 6px 2px var(--box-shadow);
+    border-radius: 6px;
+    height: 1.5em;
+}
+#botmiddleHorizontalPanel{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 1.5em;
+    gap: 0.5em;
+    
+}
+#botmiddleHorizontalPanel > button {
+    font-family: "Joti One", serif;
+    font-size: 1.2em;
+    width: 250px;
+    background-color: var(--button-bg);
+    border: 2px solid var(--button-brd);
+    box-shadow: 3px 3px 6px 2px var(--box-shadow);
+    text-shadow: 2px 2px 4px 4px var(--shadow);
+    border-radius: 6px;
+    cursor: pointer;
+    
+}
+#botmiddleHorizontalPanel > button:hover {
+    background-color: var(--button-hover-bg);
+}

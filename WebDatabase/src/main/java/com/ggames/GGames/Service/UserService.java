@@ -2,6 +2,39 @@ package com.ggames.GGames.Service;
 
 import com.ggames.GGames.Service.Dto.UserDto;
 
-public interface UserService {
-    UserDto register(UserDto userDto);
+@Service
+public class UserService {
+    private final UserRepository userRepository;
+
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    public UserEntity registerUser(String username, String password) {
+        // validáció
+        if (userRepository.findByUsername(username).isPresent()) {
+            throw new RuntimeException("Username already exists!");
+        }
+
+        if (password.length() < 6) {
+            throw new RuntimeException("Password too short!");
+        }
+
+        // jelszó hash-elés a jbcrypt-tel
+        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+        UserEntity user = new UserEntity(username, hashedPassword);
+        return userRepository.save(user);
+    }
+
+    
+    /**
+     * Validates user credentials.
+     * Returns true if username exists and password matches, false otherwise.
+     * No details are shared to protect against spoofing.
+     */
+    public boolean validateCredentials(String username, String password) {
+        return userRepository.findByUsername(username)
+                .map(user -> org.mindrot.jbcrypt.BCrypt.checkpw(password, user.getPassword()))
+                .orElse(false);
+    }
 }

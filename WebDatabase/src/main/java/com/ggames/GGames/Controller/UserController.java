@@ -1,27 +1,60 @@
 package com.ggames.GGames.Controller;
 
-import com.ggames.GGames.Data.Entity.UserEntity;
+import com.ggames.GGames.Service.Dto.UserDto;
 import com.ggames.GGames.Service.UserService;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.http.ResponseEntity;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
-@RequestMapping("/api")
+@Controller
+@RequiredArgsConstructor
 public class UserController {
+
     private final UserService userService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
+    @GetMapping("/login")
+    public String loginPage() {
+        return "login";
+    }
+
+    @GetMapping("/register")
+    public String registerPage(Model model) {
+        model.addAttribute("user", new UserDto());
+        return "register";
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody UserEntity    user) {
+    public String register(@ModelAttribute("user") UserDto userDto, Model model) {
         try {
-            UserEntity newUser = userService.registerUser(user.getUsername(), user.getEmail(), user.getPassword());
-            return ResponseEntity.ok("User registered successfully: " + newUser.getUsername());
+            userService.register(userDto); // mentés az adatbázisba
+            return "redirect:/login?success"; // sikeres regisztráció
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            model.addAttribute("errorMessage", e.getMessage()); // hibaüzenet
+            return "register"; // vissza a regisztrációs oldalra
         }
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody UserEntity user) {
+        boolean valid = userService.validateCredentials(user.getUsername(), user.getPassword());
+        if (valid) {
+            return ResponseEntity.ok().build();
+        } else {
+            // Always return generic error to avoid leaking info
+            return ResponseEntity.status(401).body("Invalid credentials");
+        }
+    }
+
+    @GetMapping("/home")
+    public String home() {
+        return "home";
+    }
+
+    @GetMapping("/admin/dashboard")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String adminDashboard() {
+        return "admin-dashboard";
     }
 }

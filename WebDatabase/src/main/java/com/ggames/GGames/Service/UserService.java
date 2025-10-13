@@ -1,9 +1,6 @@
 package com.ggames.GGames.Service;
 
-import com.ggames.GGames.Data.Entity.UserEntity;
-import com.ggames.GGames.Data.Repository.UserRepository;
-import org.mindrot.jbcrypt.BCrypt;
-import org.springframework.stereotype.Service;
+import com.ggames.GGames.Service.Dto.UserDto;
 
 @Service
 public class UserService {

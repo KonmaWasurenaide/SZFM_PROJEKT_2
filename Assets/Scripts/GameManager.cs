@@ -101,5 +101,6 @@ public class GameManager : MonoBehaviour
     public void QuitToMainMenu()
     {
         SceneManager.LoadScene("Menu");
+        Time.timeScale = 1;
     }
 }

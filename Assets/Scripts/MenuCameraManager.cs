@@ -12,25 +12,20 @@ public class MenuCameraManager : MonoBehaviour
     private Vector3 newPosition;
     private Quaternion newRotation;
     // Start is called before the first frame update
-    void Awake()
+    private void Awake()
     {
         newPosition = transform.position;
         newRotation= transform.rotation;
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    private void FixedUpdate()
     {
-        
-        
-        transform.position = Vector3.MoveTowards(transform.position, newPosition, Time.deltaTime * lerpSpeed);
-        transform.rotation = Quaternion.Lerp(transform.rotation, newRotation, Time.deltaTime*rotationSpeed);
 
-        if(Vector3.Distance(transform.position, newPosition)< 1f)
-        {
-            GetNewPosition();
-        }
-        
+        UpdateMainMenuCamera();
+
+
+
     }
 
     private void GetNewPosition()
@@ -41,7 +36,16 @@ public class MenuCameraManager : MonoBehaviour
         newRotation = Quaternion.Euler(42.6f,Random.Range(yRotationRange.x,yRotationRange.y),0);
     }
 
+    private void UpdateMainMenuCamera()
+    {
+        transform.position = Vector3.MoveTowards(transform.position, newPosition, Time.deltaTime * lerpSpeed);
+        transform.rotation = Quaternion.Lerp(transform.rotation, newRotation, Time.deltaTime * rotationSpeed);
 
+        if (Vector3.Distance(transform.position, newPosition) < 1f)
+        {
+            GetNewPosition();
+        }
+    }
 }
 
 

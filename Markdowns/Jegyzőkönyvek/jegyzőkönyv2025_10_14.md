@@ -1,4 +1,4 @@
-Dátum: 2025.10.14, szerda
+Dátum: 2025.10.14, kedd
 
 Résztvevők: Mátyás Zoltán, Kozicz Gergő
 

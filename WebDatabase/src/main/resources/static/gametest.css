@@ -1,0 +1,14 @@
+#game {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+}
+
+#Better_google_dino {
+    margin: auto;
+    width: 100%;
+    max-width: 1200px;   /* maximum size */
+    aspect-ratio: 800 / 400; /* keeps original 800x400 ratio */
+    height: auto;
+    background: #000;
+}

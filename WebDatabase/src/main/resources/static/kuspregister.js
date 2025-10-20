@@ -45,36 +45,5 @@ registerButton.addEventListener('click', async (e) => {
     }
 });
 
-//Login function
-loginButton.addEventListener('click', async (e) => {
-    e.preventDefault();
 
-    const username = usernameInput.value.trim();
-    const password = passwordInput.value.trim();
-
-    if (!username || !password) {
-        errorMessage.textContent = 'Please fill in all fields.';
-        return;
-    }
-
-    try {
-        const response = await fetch('http://localhost:9090/api/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ username, password })
-        });
-
-        if (response.ok) {
-            
-            window.location.href = 'template.html';
-        } else {
-            const errorMsg = await response.text();
-            errorMessage.textContent =  errorMsg;
-        }
-    } catch (error) {
-        errorMessage.textContent =  error.message;
-    }
-});
 });

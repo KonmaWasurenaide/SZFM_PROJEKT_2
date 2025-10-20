@@ -95,3 +95,7 @@ input {
 #botmiddleHorizontalPanel > button:hover {
     background-color: var(--button-hover-bg);
 }
+#errorMessage {
+    color: red;
+    
+}

@@ -32,7 +32,7 @@ public class UserController {
         if (valid) {
             return ResponseEntity.ok().build();
         } else {
-            // Always return generic error to avoid leaking info
+            // Always return generic error to avoid leaking info, its a best practice
             return ResponseEntity.status(401).body("Invalid credentials");
         }
     }

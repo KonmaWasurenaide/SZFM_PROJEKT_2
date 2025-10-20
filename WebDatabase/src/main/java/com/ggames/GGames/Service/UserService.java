@@ -26,12 +26,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    
-    /**
-     * Validates user credentials.
-     * Returns true if username exists and password matches, false otherwise.
-     * No details are shared to protect against spoofing.
-     */
+   
     public boolean validateCredentials(String username, String password) {
         return userRepository.findByUsername(username)
                 .map(user -> org.mindrot.jbcrypt.BCrypt.checkpw(password, user.getPassword()))

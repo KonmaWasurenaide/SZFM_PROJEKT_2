@@ -22,7 +22,7 @@ loginButton.addEventListener('click', async (e) => {
     }
 
     try {
-        const response = await fetch('http://localhost:9090/api/login', {
+        const response = await fetch('http://13.60.252.87:80/api/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -32,7 +32,7 @@ loginButton.addEventListener('click', async (e) => {
 
         if (response.ok) {
             
-            window.location.href = 'template.html';
+            window.location.href = 'https://play.unity.com/en/games/9f8c8e03-e6fd-4685-bce4-ec67931fa74a/better-google-dino';
         } else {
             const errorMsg = await response.text();
             errorMessage.textContent =  errorMsg;

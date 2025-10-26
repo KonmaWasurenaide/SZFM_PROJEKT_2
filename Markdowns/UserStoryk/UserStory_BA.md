@@ -18,3 +18,10 @@
 | Cím | UserStory | Elfogadási kritérium|Prioritás|
 |-----|-----------|---------------------|---------|
 |UI tervek implementálása és adatbázishoz kapcsolódás| Felhasználóként szeretném hogy a weboldal jól nézzen ki és tudjak regisztrálni.| Kész weboldal framework és database connection. Befejezni azt amit az Sprint 2-ben nem tudtam|Sprint 3|
+
+
+notes:
+AWS server structure:
+- springboot database
+- nginx redirection from port80 to port8080 for safety
+- app.jar contains the springboot database

@@ -22,7 +22,7 @@ registerButton.addEventListener('click', async (e) => {
     }
 
     try {
-        const response = await fetch('http://13.60.252.87:80/api/register', {
+        const response = await fetch('http://kusp.games/api/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -58,7 +58,7 @@ loginButton.addEventListener('click', async (e) => {
     }
 
     try {
-        const response = await fetch('http://13.60.252.87:80/api/login', {
+        const response = await fetch('http://kusp.games/api/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

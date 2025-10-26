@@ -51,7 +51,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log("backleft: "+backLeftWheelCollider.rotationSpeed+" front left: "+ frontLeftWheelCollider.rotationSpeed);
+        //Debug.Log("backleft: "+backLeftWheelCollider.rotationSpeed+" front left: "+ frontLeftWheelCollider.rotationSpeed);
         
         speed = rb.velocity.magnitude;
         GetInput();
@@ -61,7 +61,7 @@ public class PlayerController : MonoBehaviour
         ApplyBreaking();
         ApplyHandBreak();
         
-        //Debug.Log(speed);
+        
 
     }
 
@@ -117,11 +117,6 @@ public class PlayerController : MonoBehaviour
            backLeftWheelCollider.motorTorque = verticalInput * motorForce;
            backRightWheelCollider.motorTorque = verticalInput * motorForce;
         
-        
-
-        
-
-
     }
 
     private void ApplyHandBreak()

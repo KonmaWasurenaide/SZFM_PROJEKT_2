@@ -11,6 +11,7 @@ public class GameOverManager : MonoBehaviour
     GameManager gameManager;
     int timer = 7;
     bool policeNear;
+    bool routineRuns;
     
     // Start is called before the first frame update
     void Start()
@@ -20,19 +21,17 @@ public class GameOverManager : MonoBehaviour
     }
     IEnumerator EscapeTimer()
     {
+        routineRuns = true;
+        Debug.Log("corut");
         timer = 7;
         timerText.SetText("Time Left: "+timer.ToString());
         escapeTimerUI.SetActive(true);
-        while (true)
+        while (policeNear)
         {
             yield return new WaitForSeconds(1);
             timer--;
             timerText.SetText("Time Left: " + timer.ToString());
-            if (policeNear==false)
-            {
-                break;
-                
-            }
+            
             if (policeNear&& timer==0)
             {
                 gameManager.GameOver();
@@ -40,6 +39,7 @@ public class GameOverManager : MonoBehaviour
             }
             
         }
+        routineRuns= false;
         StopCoroutine(EscapeTimer());
 
         
@@ -69,7 +69,7 @@ public class GameOverManager : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Police")&& policeNear==false)
+        if (other.CompareTag("Police")&& policeNear==false && routineRuns==false)
         {
             
             policeNear = true;
@@ -79,7 +79,16 @@ public class GameOverManager : MonoBehaviour
         
         
     }
-    
+    /*
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.CompareTag("Police"))
+        {
+            policeNear = true;
+        }
+    }
+    */
+
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Police"))

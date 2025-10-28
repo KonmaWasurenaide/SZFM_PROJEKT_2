@@ -10,8 +10,8 @@ public class GameOverManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI timerText;
     GameManager gameManager;
     int timer = 7;
-    bool policeNear;
-    bool routineRuns;
+    [SerializeField] bool policeNear;
+    [SerializeField] bool routineRuns;
     
     // Start is called before the first frame update
     void Start()
@@ -24,13 +24,13 @@ public class GameOverManager : MonoBehaviour
         routineRuns = true;
         Debug.Log("corut");
         timer = 7;
-        timerText.SetText("Time Left: "+timer.ToString());
+        timerText.SetText("Busted In: " + timer.ToString());
         escapeTimerUI.SetActive(true);
         while (policeNear)
         {
             yield return new WaitForSeconds(1);
             timer--;
-            timerText.SetText("Time Left: " + timer.ToString());
+            timerText.SetText("Busted In: " + timer.ToString());
             
             if (policeNear&& timer==0)
             {
@@ -79,15 +79,17 @@ public class GameOverManager : MonoBehaviour
         
         
     }
-    /*
+
     private void OnTriggerStay(Collider other)
     {
-        if (other.CompareTag("Police"))
+        if (other.CompareTag("Police") && policeNear==false)
         {
             policeNear = true;
+            escapeTimerUI.SetActive(true);
         }
+        
     }
-    */
+
 
     private void OnTriggerExit(Collider other)
     {

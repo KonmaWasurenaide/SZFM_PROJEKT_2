@@ -14,3 +14,9 @@
 | Cím | UserStory | Elfogadási kritérium|Sprint |
 |-----|-----------|---------------------|---------|
 |Pont és Idő| Játékosként azt szeretném, hogy játék közben lássam, hogy a játék adott pillanatában mennyi pontom van. Továbbá azt, hogy lássam, hogy mennyi ideje folyik az adott játékmenet. | A játék elkezdte után folyamatosan frissüljön a pontszám és legyen közölve a játékos felé. Az idő múlását egy 00:00 formátumban megírt óra mutassa. Mindkét információ jól látható helyen és formátumban legyen. | Sprint #3 |
+
+---
+
+| Cím | UserStory | Elfogadási kritérium|Sprint |
+|-----|-----------|---------------------|---------|
+|Wanted Level|Játékosként azt szeretném, hogy a játék közben, ahogy telik az idő úgy egyre több rendőr kergessen a körözésemnek megfelelően a minél izgalmassabb hajsza érdekében. Ezt tudjam követni a képernyőn csillagok formájában, hogy éppen milyen körözés alatt állok. | A játék megkezdésével kezdjenek körözni a rendőrők. A körözést végig tudjam követni csillagokkal jelzett felhasználói felület segítségével, jól látható helyen a képernyő tetejének közepén. Minél nagyobb a körözésem annál több rendőr jöjjön. 1 csillag -> 1 rendőr, 2 csillag -> 2 rendőr stb. . Ez egészen 5 csillagik, azaz 5 rendőrig menjen. Miután elértem a maximum körözési szintet ne spawnoljon több rendőr. |Sprint #4 |

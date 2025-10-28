@@ -35,3 +35,6 @@
 - Legyen újrafelhasználható
 ---
 
+| Cím | UserStory | Elfogadási kritérium|Sprint |
+|-----|-----------|---------------------|---------|
+|Game Over|Játékosként azt szeretném, hogyha a rendőrök sokáig a közelemben vannak és nincs menekvés a kutyaszorítóból, akkor a vége legyen a játéknak. A segítségemre szolgáljon továbbá egy visszaszámlákó, mielőtt elkapnának, hogy tudjam, hogy mennyi időm van még elhúznom onnan. | Ahogy egy bizonyos közelségbe ér az ágens, akkor induljon el egy visszaszámláló (coroutine) jelezve az elmenekülsére fennmaradt időt. Továbbá ha a visszaszámláló lejár, akkor jelenjen meg a game over felület, ahol újra tudom indítani a játékot vagy ki tudok lépni a főmenübe. |Sprint #4 |

@@ -43,8 +43,7 @@ public class GameManager : MonoBehaviour
 
         PauseManager();
         
-        //forTesting
-        GameOverTester();
+        
 
     }
 
@@ -120,20 +119,13 @@ public class GameManager : MonoBehaviour
 
         }
     }
-    //forTesting
-    public void GameOverTester()
-    {
-        if(Input.GetKey(KeyCode.Q))
-        {
-            gameOver = true;
-            GameOver();
-        }
-    }
+    
 
 // ellenorizni hogy ne tudd megnyitni a pause menut kozbe
     public void GameOver()
     {
         SaveHighScore(Mathf.Floor(score));
+        gameOver = true;
         highScoreText.SetText("HighScore: " + LoadHighScore().ToString());
         gameOverMenuAnimator.SetBool("IsOpen", true);
         gameOverMenuAnimator.SetBool("IsClose", false);

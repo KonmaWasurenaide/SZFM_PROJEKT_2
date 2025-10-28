@@ -20,7 +20,7 @@ public class MenuManager : MonoBehaviour
 
     public void StartGame()
     {
-        SceneManager.LoadScene("Game");
+        SceneManager.LoadScene("AIDevelopment");
     }
 
     public void Quit()

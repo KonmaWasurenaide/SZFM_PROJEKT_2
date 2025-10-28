@@ -236,6 +236,7 @@ GameObject:
   - component: {fileID: 7624956183723758767}
   - component: {fileID: 7640006804484208790}
   - component: {fileID: 3252147881829280483}
+  - component: {fileID: 9010474475786553262}
   m_Layer: 0
   m_Name: Body
   m_TagString: Untagged
@@ -308,6 +309,27 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &9010474475786553262
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4609567165618651004}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef34a25d32cc4e24d8469557bf0ffc8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  police: {fileID: 8766859304039325852, guid: 15fa4ebc9d77b454d9354aaae202d3be, type: 3}
+  starCount: 0
+  policeCount: 0
+  spawnPositions:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!1 &5100804103255797352
 GameObject:
   m_ObjectHideFlags: 0
@@ -593,6 +615,8 @@ GameObject:
   - component: {fileID: 4519714491709262861}
   - component: {fileID: 7643736620595059646}
   - component: {fileID: 2375890907658158379}
+  - component: {fileID: 470671142364121109}
+  - component: {fileID: 8159429325369408599}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -737,6 +761,45 @@ MonoBehaviour:
   m_IgnoreFromBuild: 1
   m_ApplyToChildren: 1
   m_AffectedAgents: ffffffff
+--- !u!136 &470671142364121109
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6349899910550361731}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 7
+  m_Height: 0
+  m_Direction: 1
+  m_Center: {x: 0, y: 1.7, z: 0}
+--- !u!114 &8159429325369408599
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6349899910550361731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 639d659d4552ee8429e04e57e934d330, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  escapeTimerUI: {fileID: 0}
+  timerText: {fileID: 0}
+  policeNear: 0
+  routineRuns: 0
 --- !u!1 &7186941341493243504
 GameObject:
   m_ObjectHideFlags: 0

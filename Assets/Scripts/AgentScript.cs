@@ -10,7 +10,7 @@ public class AgentScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        player = GameObject.Find("Player");
     }
     public void ChasePlayer()
     {

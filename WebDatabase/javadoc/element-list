@@ -1,0 +1,8 @@
+com.ggames.GGames
+com.ggames.GGames.Controller
+com.ggames.GGames.Data.Entity
+com.ggames.GGames.Data.Repository
+com.ggames.GGames.Security
+com.ggames.GGames.Service
+com.ggames.GGames.Service.Dto
+com.ggames.GGames.Service.Impl

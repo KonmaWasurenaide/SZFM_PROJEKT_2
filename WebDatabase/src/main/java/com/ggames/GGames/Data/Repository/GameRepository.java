@@ -1,7 +1,6 @@
 package com.ggames.GGames.Data.Repository;
 
 import com.ggames.GGames.Data.Entity.GameEntity;
-import com.ggames.GGames.Data.Entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

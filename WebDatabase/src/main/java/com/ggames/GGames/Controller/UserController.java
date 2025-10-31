@@ -4,8 +4,9 @@ import com.ggames.GGames.Data.Entity.UserEntity;
 import com.ggames.GGames.Service.Dto.UserDto;
 import com.ggames.GGames.Service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
+//import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -19,18 +20,6 @@ public class UserController {
     @GetMapping("/login")
     public String loginPage() {
         return "kuspgames";
-    }
-
-
-    @PostMapping("/register")
-    public String register(@ModelAttribute("user") UserDto userDto, Model model) {
-        try {
-            userService.registerUser(userDto);
-            return "redirect:/login?success"; // sikeres regisztráció
-        } catch (RuntimeException e) {
-            model.addAttribute("errorMessage", e.getMessage()); // hibaüzenet
-            return "register";
-        }
     }
 
     @PostMapping("/login")
@@ -50,7 +39,7 @@ public class UserController {
     }
 
     @GetMapping("/admin/dashboard")
-    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
     public String adminDashboard() {
         return "admin-dashboard";
     }

@@ -1,9 +1,7 @@
 package com.ggames.GGames.Service;
 
 import com.ggames.GGames.Data.Entity.UserEntity;
-import com.ggames.GGames.Data.Repository.UserRepository;
 import com.ggames.GGames.Service.Dto.UserDto;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 @Service

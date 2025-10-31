@@ -30,12 +30,13 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/register", "/login", "/h2-console/**", "/css/**").permitAll()
+                        .requestMatchers("/register", "/login", "/h2-console/**", "/css/**",
+                                "/login.html", "/kuspgames.html", "/kuspgames.css", "/kuspgames.js").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
-                        .loginPage("/login")
+                        .loginPage("/kuspgames.html")
                         .loginProcessingUrl("/login")
                         .defaultSuccessUrl("/home", false)
                         .failureUrl("/login?error")

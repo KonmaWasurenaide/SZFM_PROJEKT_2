@@ -2,6 +2,7 @@ const loginButton = document.getElementById('loginbutton');
 const registerButton = document.getElementById('registerbutton');
 const usernameInput = document.getElementById('usernameInput');
 const passwordInput = document.getElementById('passwordInput');
+const emaildInput = document.getElementById('emailInput');
 
 //Register function
 registerButton.addEventListener('click', async (e) => {
@@ -9,6 +10,7 @@ registerButton.addEventListener('click', async (e) => {
 
     const username = usernameInput.value.trim();
     const password = passwordInput.value.trim();
+    const email = passwordInput.value.trim();
 
     if (!username || !password ) {
         alert('Please fill in all fields.');
@@ -21,7 +23,7 @@ registerButton.addEventListener('click', async (e) => {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ username, password })
+            body: JSON.stringify({ username,email, password })
         });
 
         if (response.ok) {

@@ -5,6 +5,7 @@ import com.ggames.GGames.Data.Repository.UserRepository;
 import com.ggames.GGames.Service.Dto.UserDto;
 import com.ggames.GGames.Service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -14,36 +15,25 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ModelMapper modelMapper;
 
     @Override
-    public UserDto register(UserDto userDto) {
-        String username = userDto.getUsername().trim().toLowerCase();
-        String email = userDto.getEmail().trim().toLowerCase();
-        String password = userDto.getPassword();
-
-        if (userRepository.existsByUsername(username)) {
-            throw new RuntimeException("Username already exists");
+    public UserEntity registerUser(UserDto userDto) {
+        if (userRepository.findByUsername(userDto.getUsername()).isPresent()) {
+            throw new RuntimeException("A felhasználónév már foglalt.");
+        }
+        if (userRepository.findByEmail(userDto.getEmail()).isPresent()) {
+            throw new RuntimeException("Az email cím már foglalt.");
         }
 
-        if (userRepository.existsByEmail(email)) {
-            throw new RuntimeException("Email already registered");
+        isValidPassword(userDto.getPassword());
+
+        UserEntity user = modelMapper.map(userDto, UserEntity.class);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        if (user.getRole() == null || user.getRole().isEmpty()) {
+            user.setRole("USER");
         }
-
-        if (!isValidPassword(password)) {
-            throw new RuntimeException("Password must contain at least 8 characters, " +
-                    "including uppercase, lowercase, number and special character.");
-        }
-
-        UserEntity user = UserEntity.builder()
-                .username(username)
-                .email(email)
-                .password(passwordEncoder.encode(password))
-                .role("USER")
-                .build();
-
-        userRepository.save(user);
-
-        return new UserDto(user.getUsername(), user.getEmail(), null);
+        return userRepository.save(user);
     }
 
     private boolean isValidPassword(String password) {
@@ -55,6 +45,13 @@ public class UserServiceImpl implements UserService {
         boolean hasSpecial = password.matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?].*");
 
         return hasUpper && hasLower && hasDigit && hasSpecial;
+    }
+
+
+    public boolean validateCredentials(String username, String password) {
+        return userRepository.findByUsername(username)
+                .map(user -> org.mindrot.jbcrypt.BCrypt.checkpw(password, user.getPassword()))
+                .orElse(false);
     }
 
 }

@@ -1,8 +1,10 @@
 package com.ggames.GGames.Controller;
 
+import com.ggames.GGames.Data.Entity.UserEntity;
 import com.ggames.GGames.Service.Dto.UserDto;
 import com.ggames.GGames.Service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,23 +18,18 @@ public class UserController {
 
     @GetMapping("/login")
     public String loginPage() {
-        return "login";
+        return "kuspgames";
     }
 
-    @GetMapping("/register")
-    public String registerPage(Model model) {
-        model.addAttribute("user", new UserDto());
-        return "register";
-    }
 
     @PostMapping("/register")
     public String register(@ModelAttribute("user") UserDto userDto, Model model) {
         try {
-            userService.register(userDto); // mentés az adatbázisba
+            userService.registerUser(userDto);
             return "redirect:/login?success"; // sikeres regisztráció
         } catch (RuntimeException e) {
             model.addAttribute("errorMessage", e.getMessage()); // hibaüzenet
-            return "register"; // vissza a regisztrációs oldalra
+            return "register";
         }
     }
 

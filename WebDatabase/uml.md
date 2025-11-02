@@ -1,4 +1,4 @@
-![alt](/uml.PNG)
+![alt](./Images/uml.PNG)
 #### PlantUML code:
 ```plantuml
 @startuml

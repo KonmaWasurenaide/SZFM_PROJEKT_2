@@ -21,5 +21,17 @@
 - Precízen megrajzolt Collider rendszer 
 - Pálya szélén elég akadály vagy fal, ami megakadályozza a játékost a semmibe zuhanástól
 ---
- 
+
+# User Story #3
+
+| Cím: NavMesh AI | Prioritás: A harmadik sprint |
+|----------|----------|
+| **User Story:** Mint játékos, azt szeretném, hogy ahogy telik az idő a játékban, egyre több zsaru kergessen, szeretnék egy bünöző bőrébe bújni, és átélni egy igazi autós üldözést. Egy jól betanított, AI vezesse a rendörőket, amik megpróbálnak engem megállitani. |
+---
+**Elfogadási Kritérium:**  
+- Jól betanult, Pathfinder algoritmus használó AI ellenfelek
+- Kerülje ki az összes akadályt
+- Dinamikusan, tudja kergetni a Playert
+- Legyen újrafelhasználható
+---
 

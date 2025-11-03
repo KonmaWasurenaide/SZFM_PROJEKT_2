@@ -3,12 +3,15 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Obstacle
+  - Police
+  - star
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Movable
   - Water
   - UI
   - 

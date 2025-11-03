@@ -16,12 +16,17 @@ public class CameraManager : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void LateUpdate()
+    {
+
+        UpdateCamera();
+    }
+
+    private void UpdateCamera()
     {
         playerRotation = player.transform.rotation;
         
-        transform.transform.position = player.transform.position + offset;
-        transform.rotation = Quaternion.Euler(70,playerRotation.eulerAngles.y,0);
-
+        transform.position = player.transform.position + offset;
+        transform.rotation = Quaternion.Euler(70, playerRotation.eulerAngles.y,0);
     }
 }

@@ -7,6 +7,8 @@ public class CameraManager : MonoBehaviour
 
     private GameObject player;
     [SerializeField] Vector3 offset;
+    [SerializeField] Quaternion playerRotation;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -14,8 +16,17 @@ public class CameraManager : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
-        transform.transform.position = player.transform.position + offset;
+
+        UpdateCamera();
+    }
+
+    private void UpdateCamera()
+    {
+        playerRotation = player.transform.rotation;
+        
+        transform.position = player.transform.position + offset;
+        transform.rotation = Quaternion.Euler(70, playerRotation.eulerAngles.y,0);
     }
 }

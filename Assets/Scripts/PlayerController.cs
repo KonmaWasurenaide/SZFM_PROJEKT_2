@@ -33,6 +33,7 @@ public class PlayerController : MonoBehaviour
 
 
     [SerializeField] AnimationCurve steeringCurve;
+    //[SerializeField] AnimationCurve motorCurve;
     
     private float speed;
 
@@ -50,6 +51,8 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        //Debug.Log("backleft: "+backLeftWheelCollider.rotationSpeed+" front left: "+ frontLeftWheelCollider.rotationSpeed);
+        
         speed = rb.velocity.magnitude;
         GetInput();
         HandleMotor();
@@ -57,7 +60,9 @@ public class PlayerController : MonoBehaviour
         UpdateWheels();
         ApplyBreaking();
         ApplyHandBreak();
-        Debug.Log(rb.velocity);
+        
+        
+
     }
 
     private void GetInput()
@@ -100,6 +105,8 @@ public class PlayerController : MonoBehaviour
             isBraking = false;
         }
 
+        
+
     }
 
 
@@ -110,11 +117,6 @@ public class PlayerController : MonoBehaviour
            backLeftWheelCollider.motorTorque = verticalInput * motorForce;
            backRightWheelCollider.motorTorque = verticalInput * motorForce;
         
-        
-
-        
-
-
     }
 
     private void ApplyHandBreak()
@@ -122,10 +124,10 @@ public class PlayerController : MonoBehaviour
         if (handBrake)
         {
             
-            backLeftWheelCollider.brakeTorque = handBrakeForce*0.7f;
-            backRightWheelCollider.brakeTorque = handBrakeForce * 0.7f;
-            frontRightWheelCollider.brakeTorque = handBrakeForce * 0.1f;
-            frontLeftWheelCollider.brakeTorque = handBrakeForce * 0.1f;
+            backLeftWheelCollider.brakeTorque = handBrakeForce;
+            backRightWheelCollider.brakeTorque = handBrakeForce;
+            frontRightWheelCollider.brakeTorque = handBrakeForce;
+            frontLeftWheelCollider.brakeTorque = handBrakeForce;
             isBraking = true;
         }
         else
@@ -143,13 +145,13 @@ public class PlayerController : MonoBehaviour
 
         if (isBraking)
         {
-            // rendes fékezés inputból
+            
             totalBrakeForce = brakeInput * brakeForce;
         }
         else if (Mathf.Abs(verticalInput) < 0.1f && !handBrake)
         {
-            // motorfék, ha nincs gáz
-            totalBrakeForce = brakeForce * 0.2f; // kb. 20% erõ
+            
+            totalBrakeForce = brakeForce * 0.15f; 
         }
 
 
@@ -185,6 +187,21 @@ public class PlayerController : MonoBehaviour
         UpdateSingleWheel(frontRightWheelCollider, frontRightWheelTransform);
         UpdateSingleWheel(backLeftWheelCollider, backLeftWheelTransform);
         UpdateSingleWheel(backRightWheelCollider, backRightWheelTransform);
+    }
+
+    
+
+    
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Obstacle"))
+        {
+
+            backLeftWheelCollider.rotationSpeed = 0f;
+            backRightWheelCollider.rotationSpeed = 0f;
+
+        }
     }
     /*[SerializeField] float horizontalInput;
     [SerializeField] float verticalInput;

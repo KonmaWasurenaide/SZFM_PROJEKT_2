@@ -7,6 +7,7 @@ TagManager:
   - Obstacle
   - Police
   - star
+  - DespawnTrigger
   layers:
   - Default
   - TransparentFX

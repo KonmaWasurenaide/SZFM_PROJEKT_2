@@ -9,7 +9,7 @@ public class EnemySpawnManager : MonoBehaviour
     [SerializeField] GameObject police;
     [SerializeField] int starCount;
     [SerializeField] int policeCount;
-    [SerializeField] Transform[] spawnPositions;
+    public Transform[] spawnPositions;
     // Start is called before the first frame update
     void Start()
     {

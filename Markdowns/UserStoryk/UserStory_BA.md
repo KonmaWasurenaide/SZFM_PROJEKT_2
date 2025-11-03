@@ -22,7 +22,12 @@
 ### Sprint 4
 | Cím | UserStory | Elfogadási kritérium|Prioritás|
 |-----|-----------|---------------------|---------|
-|Finomítgatás| Felhasználóként szeretném hogy a weboldal jól nézzen ki és tudjak regisztrálni. A password legyen elrejtve, a database ne legyen kitörölve újraindításkor| Password hiding, database persistance, etc|Sprint 3|
+|Finomítgatás| Felhasználóként szeretném hogy a weboldal jól nézzen ki és tudjak regisztrálni. A password legyen elrejtve, a database ne legyen kitörölve újraindításkor| Password hiding, database persistance, etc|Sprint 4|
+
+### Sprint 5
+| Cím | UserStory | Elfogadási kritérium|Prioritás|
+|-----|-----------|---------------------|---------|
+|AWS struktúra helyreállítása és dokumentálása| Ez fejlesztőknek szól, nincs felhasználói request| AWS, weboldal online és működik. Részletes dokumentáció az AWS struktúráról.|Sprint 5|
 
 notes:
 AWS server structure:

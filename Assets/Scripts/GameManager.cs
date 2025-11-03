@@ -17,17 +17,20 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject gameOverMenu;
 
     [SerializeField] Animator gameOverMenuAnimator;
-
-    private float actualTime = 0;
+    [SerializeField] GameObject[] stars;
+    
+    public float actualTime = 0;
     public float score;
     public bool gameOver;
     public bool isPaused;
+    
     // Start is called before the first frame update
     void Start()
     {
 
         gameOver = false;
         isPaused = false;
+        
     }
 
     // Update is called once per frame
@@ -39,13 +42,13 @@ public class GameManager : MonoBehaviour
             UpdateTimer();
             UpdateScore();
         }
-
+        
 
         PauseManager();
-        
-        //forTesting
-        GameOverTester();
+        UpdateStars();
 
+        
+        
     }
 
     public void UpdateScore()
@@ -60,6 +63,33 @@ public class GameManager : MonoBehaviour
         int minutes = Mathf.FloorToInt(actualTime / 60);
         int seconds = Mathf.FloorToInt(actualTime % 60);
         timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+    }
+
+    public void UpdateStars()
+    {
+        int minutes = Mathf.FloorToInt(actualTime / 60);
+        switch (minutes)
+        {
+            case 0:
+                stars[0].SetActive(true);
+                break;
+            case 1:
+                stars[1].SetActive(true);
+                break;
+            case 2:
+                stars[2].SetActive(true);
+                break;
+            case 3:
+                stars[3].SetActive(true);
+                break;
+            case 4:
+                stars[4].SetActive(true);
+                break;
+            default: 
+                break;
+        }
+
+
     }
 
     public void SaveHighScore(float score)
@@ -120,20 +150,13 @@ public class GameManager : MonoBehaviour
 
         }
     }
-    //forTesting
-    public void GameOverTester()
-    {
-        if(Input.GetKey(KeyCode.Q))
-        {
-            gameOver = true;
-            GameOver();
-        }
-    }
+    
 
 // ellenorizni hogy ne tudd megnyitni a pause menut kozbe
     public void GameOver()
     {
         SaveHighScore(Mathf.Floor(score));
+        gameOver = true;
         highScoreText.SetText("HighScore: " + LoadHighScore().ToString());
         gameOverMenuAnimator.SetBool("IsOpen", true);
         gameOverMenuAnimator.SetBool("IsClose", false);

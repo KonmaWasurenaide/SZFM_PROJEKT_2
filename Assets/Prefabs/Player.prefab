@@ -236,7 +236,6 @@ GameObject:
   - component: {fileID: 7624956183723758767}
   - component: {fileID: 7640006804484208790}
   - component: {fileID: 3252147881829280483}
-  - component: {fileID: 9010474475786553262}
   m_Layer: 0
   m_Name: Body
   m_TagString: Untagged
@@ -309,27 +308,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &9010474475786553262
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4609567165618651004}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ef34a25d32cc4e24d8469557bf0ffc8c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  police: {fileID: 8766859304039325852, guid: 15fa4ebc9d77b454d9354aaae202d3be, type: 3}
-  starCount: 0
-  policeCount: 0
-  spawnPositions:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
 --- !u!1 &5100804103255797352
 GameObject:
   m_ObjectHideFlags: 0
@@ -619,7 +597,7 @@ GameObject:
   - component: {fileID: 8159429325369408599}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

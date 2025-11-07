@@ -595,6 +595,7 @@ GameObject:
   - component: {fileID: 2375890907658158379}
   - component: {fileID: 470671142364121109}
   - component: {fileID: 8159429325369408599}
+  - component: {fileID: 612167750980970122}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -778,6 +779,14 @@ MonoBehaviour:
   timerText: {fileID: 0}
   policeNear: 0
   routineRuns: 0
+--- !u!81 &612167750980970122
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6349899910550361731}
+  m_Enabled: 1
 --- !u!1 &7186941341493243504
 GameObject:
   m_ObjectHideFlags: 0

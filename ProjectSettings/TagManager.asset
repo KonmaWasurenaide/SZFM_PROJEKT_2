@@ -8,6 +8,7 @@ TagManager:
   - Police
   - star
   - DespawnTrigger
+  - Ground
   layers:
   - Default
   - TransparentFX

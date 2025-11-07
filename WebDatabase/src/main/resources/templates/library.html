@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saját Könyvtár | KuspGames</title>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        :root {
+            --primary-color:#4CAF50;
+            --primary-dark:#388E3C;
+            --background-light:#f4f7f6;
+            --text-dark:#333;
+            --accent-color:#FF9800;
+            --accent-dark:#e68900;
+            --header-bg:#fff;
+            --border-color:#eee;
+        }
+        body{
+            font-family:'Inter',sans-serif;
+            margin:0;
+            padding:0;
+            background:var(--background-light);
+            color:var(--text-dark);
+        }
+
+        .top-header{
+            background:var(--header-bg);
+            padding:20px 40px;
+            border-bottom:1px solid var(--border-color);
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+        }
+        .main-content{
+            max-width:1200px;
+            margin:40px auto;
+            padding:0 20px;
+        }
+
+        .home-btn{
+            background:var(--primary-color);
+            color:#fff;
+            padding:8px 15px;
+            border-radius:6px;
+            text-decoration:none;
+            font-weight:600;
+            transition:background-color .3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .home-btn:hover{
+            background:var(--primary-dark);
+        }
+
+        h2{
+            border-bottom:2px solid var(--primary-color);
+            padding-bottom:10px;
+            margin-bottom:30px;
+            color: var(--primary-dark);
+            font-size: 2rem;
+        }
+
+        .library-grid{
+            display:grid;
+            grid-template-columns:repeat(auto-fill, minmax(300px, 1fr));
+            gap:25px;
+        }
+        .library-card{
+            background:#fff;
+            border:1px solid var(--border-color);
+            border-radius:8px;
+            box-shadow:0 2px 5px rgba(0,0,0,0.1);
+            overflow:hidden;
+        }
+        .library-card h3{
+            color:var(--primary-dark);
+            margin-top:0;
+            font-size: 1.4rem;
+        }
+
+        .card-image{
+            height:180px;
+            background:#ddd;
+            overflow:hidden;
+        }
+        .card-image img{
+            width:100%;
+            height:100%;
+            object-fit:cover;
+            display:block;
+        }
+        .card-image div{
+            width: 100%; height: 100%; background-color: #ddd; display: flex;
+            justify-content: center; align-items: center; font-weight: 600;
+            color: #666; font-size: 1.2rem;
+        }
+        .card-content{
+            padding:15px 20px;
+        }
+
+        .download-btn, .play-btn{
+            color:#fff;
+            padding:8px 15px;
+            border-radius:6px;
+            text-decoration:none;
+            display:inline-flex;
+            align-items:center;
+            gap:5px;
+            margin-right:10px;
+            transition:background .3s;
+            font-weight: 600;
+        }
+
+        .download-btn{
+            background:var(--primary-color);
+        }
+        .download-btn:hover{
+            background:var(--primary-dark);
+        }
+
+        .play-btn{
+            background:var(--accent-color);
+        }
+        .play-btn:hover{
+            background:var(--accent-dark);
+        }
+
+        .message-box{
+            padding:15px;
+            margin-bottom:20px;
+            border-radius:8px;
+            font-weight:600;
+            text-align:center;
+            background:#d4edda;
+            color:#155724;
+        }
+        .message-box p {
+            margin: 0;
+        }
+        .error{
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        @media (max-width: 600px) {
+            .top-header{
+                flex-direction: column;
+                gap: 10px;
+                padding: 15px 20px;
+            }
+            .main-content{
+                margin: 20px auto;
+                padding: 0 10px;
+            }
+            .library-grid{
+                gap: 15px;
+            }
+            .download-btn, .play-btn {
+                margin-top: 5px;
+                display: flex;
+                justify-content: center;
+                margin-right: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="top-header">
+    <a th:href="@{/home}" class="home-btn">
+        <i class="bi bi-arrow-left"></i> Vissza az Áruházba
+    </a>
+    <div sec:authorize="isAuthenticated()">
+        Saját Könyvtár: <strong><span th:text="${#authentication.name}"></span></strong>
+    </div>
+</div>
+
+<div class="main-content">
+    <h2>Saját Letöltött Játékaim</h2>
+
+    <div th:if="${successMessage}" class="message-box">
+        <p th:text="${successMessage}"></p>
+    </div>
+    <div th:if="${errorMessage}" class="message-box error">
+        <p th:text="${errorMessage}"></p>
+    </div>
+
+    <div class="library-grid">
+        <div th:each="game : ${games}" class="library-card">
+
+            <div class="card-image">
+                <img th:if="${game.image != null and game.image.length() > 0}"
+                     th:src="@{'/protected-images/' + ${game.image}}"
+                     th:alt="${game.name}"
+                     onerror="this.onerror=null; this.src='https://placehold.co/400x180/DDDDDD/666666?text=Kép+Hiányzik';"
+                />
+                <div th:unless="${game.image != null and game.image.length() > 0}">
+                    Kép Hiányzik
+                </div>
+            </div>
+
+            <div class="card-content">
+                <h3 th:text="${game.name}">Játék Címe</h3>
+                <p><strong>Fejlesztő:</strong> <span th:text="${game.developer}"></span></p>
+
+                <hr style="border-top:1px dashed var(--border-color)">
+
+                <a th:if="${game.downloadLink != null and game.downloadLink.length() > 0}"
+                   th:href="${game.downloadLink}" class="download-btn" target="_blank">
+                    <i class="bi bi-cloud-arrow-down"></i> Újra Letöltés
+                </a>
+
+                <a th:if="${game.playLink != null and game.playLink.length() > 0}"
+                   th:href="@{'/play/' + ${game.name}}" class="play-btn">
+                    <i class="bi bi-controller"></i> Játék Indítása
+                </a>
+
+            </div>
+        </div>
+
+        <div th:if="${games == null or #lists.isEmpty(games)}" style="grid-column: 1 / -1; text-align: center; padding: 20px;">
+            <p>Még nincsenek játékok a könyvtáradban. Látogass el az <a th:href="@{/home}" style="color: var(--primary-dark); text-decoration: none; font-weight: 600;">áruházba</a>, és tölts le néhányat!</p>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

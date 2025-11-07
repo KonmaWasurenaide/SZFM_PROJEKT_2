@@ -9,51 +9,47 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
- * A(z) {@code DataInitializer} osztály egy Spring {@code Configuration},
- * amely felelős az alkalmazás indításakor szükséges kezdeti adatok beállításáért.
- * <p>
- * Konkrétan egy alapértelmezett "admin" felhasználót hoz létre,
- * ha az még nem létezik az adatbázisban.
- * </p>
+ * Konfigurációs osztály az alkalmazás indításakor szükséges kezdeti adatok beállításához.
+ *
+ * <p>Felelős az alapértelmezett ADMIN és TESZT USER felhasználók létrehozásáért,
+ * ha azok még nem léteznek az adatbázisban.</p>
  */
 @Configuration
 @RequiredArgsConstructor
 public class DataInitializer {
 
-    /**
-     * A {@link UserRepository} a felhasználói adatok elérésére szolgál
-     * az admin felhasználó létezésének ellenőrzéséhez és mentéséhez.
-     */
     private final UserRepository userRepository;
-
-    /**
-     * A {@link PasswordEncoder} a jelszavak biztonságos hashelésére szolgál
-     * az admin felhasználó létrehozásakor.
-     */
     private final PasswordEncoder passwordEncoder;
 
     /**
-     * Létrehoz egy {@link CommandLineRunner} beant, amely az alkalmazás
-     * teljes kontextusának betöltése után azonnal lefut.
-     * <p>
-     * Ez a metódus ellenőrzi, hogy létezik-e az "admin" nevű felhasználó.
-     * Ha nem, létrehoz egy alapértelmezett admin felhasználót
-     * (felhasználónév: "admin", jelszó: "admin" [titkosítva], szerepkör: "ADMIN").
-     * </p>
+     * Létrehoz egy {@link CommandLineRunner} beant, amely az alkalmazás indításakor lefut.
      *
-     * @return Egy {@link CommandLineRunner} példány, amely elindítja az admin inicializációs logikát.
+     * <p>A metódus ellenőrzi, hogy az "admin" és a "testuser" fiókok léteznek-e, és ha nem, létrehozza azokat.</p>
+     *
+     * @return A {@code CommandLineRunner} objektum, ami elvégzi az inicializálást.
      */
     @Bean
-    public CommandLineRunner initAdmin() {
+    public CommandLineRunner initData() {
         return args -> {
+
             if (!userRepository.existsByUsername("admin")) {
                 userRepository.save(UserEntity.builder()
                         .username("admin")
-                        .email("admin@example.com")
+                        .email("admin@ggames.com")
                         .password(passwordEncoder.encode("admin"))
-                        .role("ADMIN")
+                        .userRole("ADMIN")
                         .build());
                 System.out.println("Admin user created: admin / admin");
+            }
+
+            if (!userRepository.existsByUsername("testuser")) {
+                userRepository.save(UserEntity.builder()
+                        .username("user")
+                        .email("user@ggames.com")
+                        .password(passwordEncoder.encode("user"))
+                        .userRole("USER")
+                        .build());
+                System.out.println("Test user created: user / user");
             }
         };
     }

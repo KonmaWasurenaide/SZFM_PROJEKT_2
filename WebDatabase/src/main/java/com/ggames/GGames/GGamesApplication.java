@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 /**
- * A(z) {@code GGamesApplication} az alkalmazás fő osztálya,
+ * A {@code GGamesApplication} az alkalmazás fő osztálya,
  * amely a Spring Boot alkalmazást elindítja.
  * <p>
  * A {@code @SpringBootApplication} annotáció egyesíti a {@code @Configuration},

@@ -1,74 +1,120 @@
 package com.ggames.GGames.Data.Entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
- * A(z) {@code UserEntity} osztály egy felhasználói fiókot reprezentál
- * az adatbázisban.
- * <p>
- * Ez egy JPA entitás, a(z) "users" adatbázistáblához van hozzárendelve,
- * és tartalmazza a felhasználó hitelesítési és alapvető azonosító adatait,
- * mint például a felhasználónév, e-mail cím és jelszó.
- * </p>
+ * Entitás az alkalmazás felhasználóinak reprezentálására.
+ *
+ * <p>Implementálja a Spring Security {@code UserDetails} interfészét, ezzel biztosítva
+ * a hitelesítési és jogosultságkezelési funkciókat.</p>
  */
 @Entity
 @Table(name = "users")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserEntity {
+public class UserEntity implements UserDetails {
 
-    /**
-     * A felhasználói entitás egyedi azonosítója (Primary Key).
-     * Ez az ID automatikusan generálódik.
-     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**
-     * A felhasználó egyedi felhasználóneve.
-     * Nem lehet null értékű és egyedinek (unique) kell lennie.
+     * A felhasználó bejelentkezési neve (kötelező, egyedi).
      */
     @Column(nullable = false, unique = true)
     private String username;
 
     /**
-     * A felhasználó egyedi e-mail címe.
-     * Nem lehet null értékű és egyedinek (unique) kell lennie.
+     * A felhasználó email címe (kötelező, egyedi).
      */
     @Column(nullable = false, unique = true)
     private String email;
 
     /**
-     * A felhasználó titkosított jelszava.
-     * Nem lehet null értékű.
+     * A felhasználó jelszava (hash-elve tárolva, kötelező).
      */
     @Column(nullable = false)
     private String password;
 
     /**
-     * A felhasználó jogosultsági szerepköre.
-     * Alapértelmezett értéke: "USER".
+     * A felhasználó jogosultsági szerepköre (alapértelmezett: "USER").
      */
-    @Column(name = "role")
-    private String role = "USER";
+    @Column(name = "user_role")
+    private String userRole = "USER";
+
 
     /**
-     * Konstruktor a felhasználónév és jelszó inicializálásához.
-     * <p>
-     * Ezt tipikusan a bejelentkezési adatokból történő gyors
-     * entitás létrehozásához használják.
-     * </p>
-     *
-     * @param username A felhasználó felhasználóneve.
-     * @param password A felhasználó jelszava.
+     * Visszaadja a felhasználó jogosultságait.
+     * @return A szerepkört tartalmazó {@code GrantedAuthority} lista, "ROLE_" prefixszel ellátva.
      */
-    public UserEntity(String username, String password) {
-        this.username = username;
-        this.password = password;
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("ROLE_" + this.userRole));
     }
+
+    /**
+     * Visszaadja a felhasználó bejelentkezési nevét.
+     * @return A felhasználónév.
+     */
+    @Override
+    public String getUsername() {
+        return this.username;
+    }
+
+    /**
+     * Visszaadja a felhasználó jelszavát.
+     * @return A jelszó.
+     */
+    @Override
+    public String getPassword() {
+        return this.password;
+    }
+
+    /**
+     * Jelzi, hogy a felhasználói fiók nem járt-e le.
+     * @return Mindig {@code true}.
+     */
+    @Override
+    public boolean isAccountNonExpired() { return true; }
+
+    /**
+     * Jelzi, hogy a felhasználói fiók nincs-e zárolva.
+     * @return Mindig {@code true}.
+     */
+    @Override
+    public boolean isAccountNonLocked() { return true; }
+
+    /**
+     * Jelzi, hogy a felhasználó hitelesítő adatai nem jártak-e le.
+     * @return Mindig {@code true}.
+     */
+    @Override
+    public boolean isCredentialsNonExpired() { return true; }
+
+    /**
+     * Jelzi, hogy a felhasználó engedélyezve van-e.
+     * @return Mindig {@code true}.
+     */
+    @Override
+    public boolean isEnabled() { return true; }
+
+    /**
+     * A felhasználó által birtokolt játékok listája (könyvtár).
+     * Kapcsolat: Egy felhasználó több letöltéssel rendelkezhet (One-to-Many).
+     */
+    @OneToMany(mappedBy = "user")
+    private List<DownloadEntity> downloadedEntitiys = new ArrayList<>();
 }

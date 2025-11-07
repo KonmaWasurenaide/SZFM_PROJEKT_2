@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Játékkezelés | KuspGames</title>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+        :root {
+            --primary-color:#4CAF50;
+            --primary-dark:#388E3C;
+            --background-light:#f4f7f6;
+            --text-dark:#333;
+            --accent-color:#FF9800;
+            --accent-dark:#e68900;
+            --header-bg:#fff;
+            --border-color:#eee;
+        }
+        body {
+            background:var(--background-light);
+            color:var(--text-dark);
+            font-family:'Inter',sans-serif;
+            margin:0;
+            padding:0;
+        }
+        .main-content {
+            max-width:1200px;
+            margin:40px auto;
+            padding:0 20px;
+        }
+        h2.section-title {
+            border-bottom:2px solid var(--primary-color);
+            margin-bottom:25px;
+            padding-bottom:10px;
+        }
+
+        .top-header {
+            align-items:center;
+            border-bottom:1px solid var(--border-color);
+            display:flex;
+            justify-content:space-between;
+            padding:20px 40px;
+            background:var(--header-bg);
+        }
+        .header-left {
+            align-items:center;
+            display:flex;
+            gap:25px;
+        }
+        .site-title {
+            color:var(--primary-dark);
+            font-size:1.8rem;
+            font-weight:700;
+            margin:0;
+        }
+        .home-btn {
+            background:var(--primary-color);
+            border-radius:6px;
+            color:#fff;
+            font-weight:600;
+            padding:8px 15px;
+            text-decoration:none;
+            transition:background-color .3s;
+        }
+        .home-btn:hover {
+            background:var(--primary-dark);
+        }
+        .logout-btn {
+            background:none;
+            border:none;
+            cursor:pointer;
+            font-weight:600;
+            padding:0;
+            text-decoration:underline;
+        }
+
+        .admin-form {
+            background:var(--header-bg);
+            border:1px solid var(--border-color);
+            border-radius:8px;
+            box-shadow:0 4px 10px rgba(0,0,0,0.05);
+            margin-bottom:40px;
+            padding:20px;
+        }
+        .admin-form .form-group {
+            display: block;
+            gap: 0;
+            margin-bottom: 5px;
+        }
+        .admin-form .form-group > div {
+            flex: 1 1 100%;
+            margin-bottom: 10px;
+        }
+        .admin-form label {
+            display:block;
+            font-weight:600;
+            margin-bottom:5px;
+            margin-top:12px;
+        }
+        .admin-form input,
+        .admin-form textarea {
+            border:1px solid var(--border-color);
+            border-radius:6px;
+            box-sizing:border-box;
+            font-family:'Inter',sans-serif;
+            padding:8px 10px;
+            width:100%;
+        }
+        .admin-form button {
+            background:var(--primary-color);
+            border:none;
+            border-radius:6px;
+            cursor:pointer;
+            font-weight:600;
+            margin-top:15px;
+            padding:10px 18px;
+            transition:background-color .3s;
+            color:#fff;
+        }
+        .admin-form button:hover {
+            background:var(--primary-dark);
+        }
+
+        table {
+            background:#fff;
+            border-collapse:collapse;
+            border-radius:8px;
+            box-shadow:0 2px 8px rgba(0,0,0,0.05);
+            overflow:hidden;
+            table-layout:fixed;
+            width:100%;
+        }
+        th,td {
+            border-bottom:1px solid var(--border-color);
+            font-size:.9rem;
+            padding:12px 10px;
+            word-wrap:break-word;
+        }
+        th {
+            background:var(--primary-color);
+            color:#fff;
+            font-size:.9rem;
+            text-align: center;
+        }
+        tr:hover {
+            background:#f9f9f9;
+        }
+
+        .col-id { width: 5%; }
+        .col-name { width: 18%; }
+        .col-price { width: 7%; }
+        .col-dev { width: 10%; }
+        .col-relase { width: 10%; }
+        .col-links { width: 30%; margin-right: -10px }
+        .col-actions { width: 15%; }
+
+        td { text-align: center; }
+        td:nth-child(2),
+        td:nth-child(3),
+        td:nth-child(4),
+        td:nth-child(6) {
+            text-align: center;
+        }
+        td.actions-cell {
+            overflow: visible;
+            text-align: left;
+            white-space: nowrap;
+        }
+        .action-btn {
+            align-items:flex-start;
+            background:var(--accent-color);
+            border:none;
+            border-radius:5px;
+            color:#fff;
+            display:inline-flex;
+            font-size:.8rem;
+            gap:5px;
+            margin: -8px 0px;
+            padding:5px 5px;
+            text-decoration:none;
+            transition:background .3s;
+        }
+        .action-btn:hover {
+            background:var(--accent-dark);
+        }
+        .delete-btn {
+            background:#e74c3c;
+
+        }
+        .delete-btn:hover {
+            background:#c0392b;
+        }
+
+        .message-box {
+            border-radius:8px;
+            font-weight:600;
+            margin-bottom:20px;
+            padding:15px;
+            text-align:center;
+        }
+        .success {
+            background:#d4edda;
+            border:1px solid #c3e6cb;
+            color:#155724;
+        }
+        .error {
+            background:#f8d7da;
+            border:1px solid #f5c6cb;
+            color:#721c24;
+        }
+
+        @media (min-width: 768px) {
+            .admin-form .form-group {
+                display: flex;
+                gap: 20px;
+            }
+            .admin-form .form-group > div {
+                margin-bottom: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="top-header">
+    <div class="header-left">
+        <a th:href="@{/home}" class="home-btn">← Vissza</a>
+        <h1 class="site-title">Játék Adminisztráció</h1>
+    </div>
+    <div sec:authorize="isAuthenticated()">
+        Bejelentkezve: <strong><span th:text="${#authentication.name}">ADMIN</span></strong>
+        <form th:action="@{/logout}" method="post" style="display:inline">
+            (<button type="submit" class="logout-btn">Kijelentkezés</button>)
+        </form>
+    </div>
+</div>
+
+<div class="main-content">
+
+    <div th:if="${successMessage}" class="message-box success">
+        <p th:text="${successMessage}"></p>
+    </div>
+    <div th:if="${errorMessage}" class="message-box error">
+        <p th:text="${errorMessage}"></p>
+    </div>
+
+    <h2 class="section-title">Új Játék Hozzáadása</h2>
+
+    <form th:action="@{/admin/save-game}" method="post" th:object="${game}" class="admin-form">
+        <input type="hidden" th:field="*{id}">
+
+        <div class="form-group">
+            <div>
+                <label for="name">Játék neve (kötelező)</label>
+                <input id="name" th:field="*{name}" type="text" placeholder="Pl.: Elden Ring" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <div>
+                <label for="price">Ár (price) - Ft</label>
+                <input id="price" th:field="*{price}" type="number" placeholder="Pl.: 18990" step="1">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div>
+                <label for="image">Kép Link (image)</label>
+                <input id="image" th:field="*{image}" type="text" placeholder="Pl.: borito.jpg">
+            </div>
+        </div>
+        <div class="form-group">
+            <div>
+                <label for="developer">Fejlesztő</label>
+                <input id="developer" th:field="*{developer}" type="text" placeholder="Pl.: FromSoftware">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div>
+                <label for="publisher">Kiadó</label>
+                <input id="publisher" th:field="*{publisher}" type="text" placeholder="Pl.: Bandai Namco">
+            </div>
+        </div>
+        <div class="form-group">
+            <div>
+                <label for="relaseDate">Megjelenés dátuma</label>
+                <input id="relaseDate" th:field="*{relaseDate}" type="date">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div>
+                <label for="downloadLink">Letöltő Link (download_link)</label>
+                <input id="downloadLink" th:field="*{downloadLink}" type="url" placeholder="Pl.: https://bolt.com/letoltes">
+            </div>
+        </div>
+        <div class="form-group">
+            <div>
+                <label for="playLink">Játék Link (play_link)</label>
+                <input id="playLink" th:field="*{playLink}" type="url" placeholder="Pl.: https://jatekos.com/inditas">
+            </div>
+        </div>
+
+        <label for="tags">Címkék (tag-ek)</label>
+        <input id="tags" th:field="*{tags}" type="text" placeholder="Pl.: RPG, Fantasy, Open World">
+
+        <label for="description">Leírás</label>
+        <textarea id="description" th:field="*{description}" rows="4" placeholder="A játék rövid leírása..."></textarea>
+
+        <button type="submit">Játék Mentése/Frissítése</button>
+    </form>
+
+    <h2 class="section-title">Játékok listája</h2>
+
+    <table>
+        <thead>
+        <tr>
+            <th class="col-id">ID</th>
+            <th class="col-name">Név</th>
+            <th class="col-price">Ár (Ft)</th>
+            <th class="col-dev">Fejlesztő</th>
+            <th class="col-relase">Megjelenés</th>
+            <th class="col-links">Linkek</th>
+            <th class="col-actions">Műveletek</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="game : ${games}">
+            <td th:text="${game.id}">1</td>
+            <td th:text="${game.name}">Játék neve</td>
+            <td th:text="${#numbers.formatDecimal(game.price, 0, 'POINT', 0, 'COMMA') + ' Ft'}">18,990 Ft</td>
+            <td th:text="${game.developer}">Fejlesztő</td>
+            <td th:text="${#dates.format(game.relaseDate, 'yyyy. MM. dd.')}">2025.10.10.</td>
+            <td class="col-links">
+                <a th:if="${game.downloadLink != null and game.downloadLink.length() > 0}"
+                   th:href="${game.downloadLink}" target="_blank">
+                    <i class="bi bi-download"></i> Letöltés
+                </a>
+                <span th:if="${(game.downloadLink != null and game.downloadLink.length() > 0) and (game.playLink != null and game.playLink.length() > 0)}"> | </span>
+                <a th:if="${game.playLink != null and game.playLink.length() > 0}"
+                   th:href="${game.playLink}" target="_blank">
+                    <i class="bi bi-controller"></i> Játék
+                </a>
+            </td>
+            <td class="actions-cell">
+                <a th:href="@{'/admin/edit/' + ${game.id}}" class="action-btn">
+                    <i class="bi bi-pencil-square"></i> Szerkesztés
+                </a>
+                <a th:href="@{'/admin/delete/' + ${game.id}}" class="action-btn delete-btn"
+                   onclick="return confirm('Biztosan törlöd ezt a játékot?');">
+                    <i class="bi bi-trash"></i> Törlés
+                </a>
+            </td>
+        </tr>
+
+        <tr th:if="${games == null or #lists.isEmpty(games)}">
+            <td colspan="7" style="text-align:center; padding:20px;">Nincs megjeleníthető játék.</td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+
+</body>
+</html>

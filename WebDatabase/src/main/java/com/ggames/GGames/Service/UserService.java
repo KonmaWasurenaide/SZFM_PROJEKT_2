@@ -1,38 +1,47 @@
 package com.ggames.GGames.Service;
 
 import com.ggames.GGames.Data.Entity.UserEntity;
+import com.ggames.GGames.Service.Dto.GameDto;
 import com.ggames.GGames.Service.Dto.UserDto;
-import org.springframework.stereotype.Service;
+import java.util.List;
 
 /**
- * A(z) {@code UserService} interfész definiálja a felhasználói adatokkal kapcsolatos
- * üzleti logikai műveleteket, mint például a regisztráció és a hitelesítés.
- * <p>
- * Ez az interfész a szolgáltatási réteg (Service Layer) része.
- * </p>
+ * Service interfész a felhasználókkal kapcsolatos üzleti logikához és adatkezelési műveletekhez.
+ *
+ * <p>Felelős a felhasználói regisztrációért, hitelesítésért és a felhasználói könyvtár (Library) kezeléséért.</p>
  */
-@Service
 public interface UserService {
-    /**
-     * Regisztrál egy új felhasználót a megadott adatok alapján.
-     * <p>
-     * Tipikusan magában foglalja az adatok validálását, a jelszó titkosítását
-     * és az új {@link UserEntity} adatbázisba mentését.
-     * </p>
-     *
-     * @param userDto A regisztrálandó felhasználó adatait tartalmazó {@link UserDto}.
-     * @return A sikeresen regisztrált és elmentett {@link UserEntity}.
-     */
-    public UserEntity registerUser(UserDto userDto);
 
     /**
-     * Validates user credentials.
-     * Returns true if username exists and password matches, false otherwise.
-     * No details are shared to protect against spoofing.
+     * Regisztrál egy új felhasználót a megadott adatokkal.
      *
-     * @param username The username to validate.
-     * @param password The raw password to check against the stored hash.
-     * @return {@code true} if the credentials are valid; {@code false} otherwise.
+     * @param userDto A regisztrációs űrlapból származó adatátviteli objektum.
+     * @return Az elmentett {@code UserEntity} objektum.
      */
-    public boolean validateCredentials(String username, String password);
+    UserEntity registerUser(UserDto userDto);
+
+    /**
+     * Hitelesíti a felhasználó belépési adatait (felhasználónév és jelszó).
+     *
+     * @param username A felhasználónév.
+     * @param password A jelszó (hash-elés előtti).
+     * @return {@code true}, ha az adatok érvényesek; egyébként {@code false}.
+     */
+    boolean validateCredentials(String username, String password);
+
+    /**
+     * Hozzáad egy játékot a felhasználó letöltött (birtokolt) játékainak listájához.
+     *
+     * @param username A felhasználó bejelentkezési neve.
+     * @param gameId A könyvtárhoz adandó játék azonosítója.
+     */
+    void addGameToUserLibrary(String username, Long gameId);
+
+    /**
+     * Visszaadja a felhasználó által birtokolt (letöltött) játékok azonosítóit (ID-it).
+     *
+     * @param username A felhasználó bejelentkezési neve.
+     * @return A birtokolt játékok azonosítóinak listája.
+     */
+    List<Long> getUserOwnedGameIds(String username);
 }

@@ -3,49 +3,55 @@ package com.ggames.GGames.Controller;
 import com.ggames.GGames.Service.Dto.UserDto;
 import com.ggames.GGames.Service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
- * A(z) {@code RegisterController} osztály a REST API vezérlője
- * a felhasználói fiókok regisztrációjának kezelésére.
- * <p>
- * Ez az osztály kezeli a bejövő HTTP POST kéréseket a regisztrációs végponton.
- * </p>
+ * Kezeli a felhasználói regisztrációs kéréseket, megjeleníti az űrlapot és feldolgozza az adatok mentését.
+ *
+ * <p>Ez a kontroller felelős a {@code /register} útvonal logikájáért.</p>
  */
-@RestController
+@Controller
 @RequiredArgsConstructor
 public class RegisterController {
 
-    /**
-     * A {@link UserService} szolgáltatás az üzleti logika elvégzésére szolgál,
-     * beleértve az új felhasználó regisztrálását és a validációt.
-     */
     private final UserService userService;
 
     /**
-     * Kezeli a felhasználói regisztrációra vonatkozó HTTP POST kéréseket.
-     * <p>
-     * Ha a regisztráció sikeres, {@code 201 Created} státuszkódot ad vissza.
-     * Ha hiba történik a regisztráció során (pl. foglalt felhasználónév/e-mail, hibás jelszó),
-     * {@code 400 Bad Request} státuszkódot ad vissza, a hibaüzenettel a válasz törzsében.
-     * </p>
+     * Megjeleníti a regisztrációs oldalt, és inicializálja a ModelAttribute-ot az űrlaphoz.
      *
-     * @param userDto A regisztrációs adatokat (felhasználónév, e-mail, jelszó) tartalmazó {@link UserDto} objektum.
-     * @return Egy {@link ResponseEntity}, amely tartalmazza a művelet sikerességét vagy hibaüzenetét.
+     * @param model A Thymeleaf modell.
+     * @return A "register" nézet neve.
+     */
+    @GetMapping("/register")
+    public String registerPage(Model model) {
+        if (!model.containsAttribute("user")) {
+            model.addAttribute("user", new UserDto());
+        }
+        return "register";
+    }
+
+    /**
+     * Feldolgozza a POST kérést, regisztrálja az új felhasználót a megadott adatokkal.
+     *
+     * @param userDto A regisztrációs űrlapból származó adatátviteli objektum.
+     * @param redirectAttributes Az átirányítási attribútumok a sikeres/sikertelen üzenetek átviteléhez.
+     * @return Átirányítás a bejelentkezési oldalra sikeres regisztráció esetén, vagy vissza a regisztrációs űrlapra hiba esetén.
      */
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody UserDto userDto) {
+    public String register(@ModelAttribute("user") UserDto userDto, RedirectAttributes redirectAttributes) {
         try {
             userService.registerUser(userDto);
-            // 201 Created státusz, sikeres regisztráció esetén
-            return ResponseEntity.status(HttpStatus.CREATED).build();
+            redirectAttributes.addFlashAttribute("success", true);
+            return "redirect:/login";
         } catch (RuntimeException e) {
-            // 400 Bad Request státusz hiba esetén, a hibaüzenettel a törzsben
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            redirectAttributes.addFlashAttribute("user", userDto);
+            redirectAttributes.addFlashAttribute("globalError", e.getMessage());
+            return "redirect:/register";
         }
     }
 }

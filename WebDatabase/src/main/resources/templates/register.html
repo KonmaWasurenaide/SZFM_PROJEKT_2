@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regisztráció</title>
+    <style th:fragment="style">
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+        :root {
+            --primary-color: #4CAF50;
+            --primary-dark: #388E3C;
+            --background-light: #e8f5e9;
+            --text-dark: #333;
+            --danger-light: #ffdddd;
+            --danger-dark: #cc0000;
+            --success-bg: #c8e6c9;
+            --success-text: #1b5e20;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-light);
+            color: var(--text-dark);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+            background: white;
+            padding: 40px 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        h2 {
+            color: var(--text-dark);
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            font-weight: 700;
+            font-size: 1.8rem;
+        }
+
+        .message {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-align: left;
+            opacity: 0;
+            animation: fadeIn 0.5s forwards;
+        }
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+        .success {
+            background-color: var(--success-bg);
+            color: var(--success-text);
+            border: 1px solid var(--primary-color);
+        }
+        .error {
+            background-color: var(--danger-light);
+            color: var(--danger-dark);
+            border: 1px solid var(--danger-dark);
+        }
+
+        input[type="text"], input[type="password"], input[type="email"] {
+            margin-bottom: 15px;
+            padding: 12px;
+            width: calc(100% - 24px);
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            transition: border-color 0.3s;
+        }
+        input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        button[type="submit"] {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            width: 100%;
+            transition: background-color 0.3s, transform 0.1s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        button[type="submit"]:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .navigation-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        .navigation-link:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+
+        @media screen and (max-width: 480px) {
+            .container {
+                margin: 20px;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Új Fiók Regisztrálása</h2>
+
+    <div th:if="${globalError}" class="message error">
+        <p>🛑 Hiba történt a regisztráció során:</p>
+        <p th:text="${globalError}"></p>
+    </div>
+
+    <form th:action="@{/register}" th:object="${user}" method="post">
+
+        <input type="text" th:field="*{username}" placeholder="Felhasználónév (kötelező)" required/><br/>
+
+        <input type="email" th:field="*{email}" placeholder="E-mail cím (kötelező)" required/><br/>
+
+        <input type="password" th:field="*{password}" placeholder="Jelszó (kötelező)" required/><br/>
+
+        <p style="text-align: left; font-size: 0.85rem; margin-top: -10px; margin-bottom: 20px; color: #666;">
+            A jelszónak legalább 8 karakter hosszúnak kell lennie, és tartalmaznia kell kisbetűt, nagybetűt, számot és speciális karaktert.
+        </p>
+
+        <button type="submit">Regisztrálok</button>
+    </form>
+
+    <p style="margin-top: 25px;">
+        Már van fiókja? <a th:href="@{/login}" class="navigation-link">Jelentkezzen be!</a>
+    </p>
+</div>
+
+</body>
+</html>

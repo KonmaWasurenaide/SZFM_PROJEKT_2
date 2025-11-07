@@ -35,6 +35,15 @@
 - Legyen újrafelhasználható
 ---
 
+# User Story #4
+
 | Cím | UserStory | Elfogadási kritérium|Sprint |
 |-----|-----------|---------------------|---------|
 |Game Over|Játékosként azt szeretném, hogyha a rendőrök sokáig a közelemben vannak és nincs menekvés a kutyaszorítóból, akkor a vége legyen a játéknak. A segítségemre szolgáljon továbbá egy visszaszámlákó, mielőtt elkapnának, hogy tudjam, hogy mennyi időm van még elhúznom onnan. | Ahogy egy bizonyos közelségbe ér az ágens, akkor induljon el egy visszaszámláló (coroutine) jelezve az elmenekülsére fennmaradt időt. Továbbá ha a visszaszámláló lejár, akkor jelenjen meg a game over felület, ahol újra tudom indítani a játékot vagy ki tudok lépni a főmenübe. |Sprint #4 |
+
+
+# User Story #5
+
+| Cím | UserStory | Elfogadási kritérium|Sprint |
+|-----|-----------|---------------------|---------|
+|SoundFX & Music| **Given:** Játékosként azt szeretném, hogy a hangulatot egy jó főmenű zene adja meg. Tudjam, hogy mikor vannak a közelemben a zsernyákok, ezért csengjen a fülemben az irritáló szirénájuk. Ez által tudjam, hogy mikor kell a gázra taposni. Valamint fontos, hogyha ütközés történik, akkor az hangilag is érezhető legyen. | **When:** Amig a főmenűben vagyunk addig valamilyen aláfestő zene legyen, mindaddig mig a játék el nem kezdődik. **Then:** Ha közel kerűl a rendőr a playerhez, akkor lehessen hallani a sziréna hangját. Bármilyen CollisionEnter-nél egy ütközés hang játszodjon le de fontos, hogy esetleges bugok esetén, többszörösen ne tudjon elindulni a Sound Effect. |Sprint #5 |

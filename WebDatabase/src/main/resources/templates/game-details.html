@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${game.name} + ' Részletek | KuspGames'"></title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <style>
+
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        :root {
+            --primary-color:#4CAF50;
+            --primary-dark:#388E3C;
+            --background-light:#f4f7f6;
+            --text-dark:#333;
+            --accent-color:#FF9800;
+            --accent-dark:#e68900;
+            --header-bg:#fff;
+            --border-color:#eee;
+        }
+        body{
+            font-family:'Inter',sans-serif;
+            margin:0;
+            padding:0;
+            background:var(--background-light);
+            color:var(--text-dark);
+        }
+
+        .top-header{
+            background:var(--header-bg);
+            padding:20px 40px;
+            border-bottom:1px solid var(--border-color);
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+        }
+        .home-btn{
+            background:var(--primary-color);
+            color:#fff;
+            padding:8px 15px;
+            border-radius:6px;
+            text-decoration:none;
+            font-weight:600;
+            transition:background-color .3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .home-btn:hover{
+            background:var(--primary-dark);
+        }
+
+        .detail-container{
+            max-width:1000px;
+            margin:40px auto;
+            padding:30px;
+            background:#fff;
+            border-radius:12px;
+            box-shadow:0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .game-header{
+            display:flex;
+            gap:30px;
+            margin-bottom:30px;
+        }
+
+        .game-image-box{
+            flex-shrink:0;
+            width:300px;
+            height:200px;
+            background:#ddd;
+            border-radius:8px;
+            overflow:hidden;
+            box-shadow:0 2px 5px rgba(0,0,0,0.1);
+        }
+        .game-image-box img{
+            width:100%;
+            height:100%;
+            object-fit:cover;
+        }
+        .game-image-box div{
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            height:100%;
+            font-weight:600;
+            color:#666;
+        }
+
+        .game-details h1{
+            color:var(--primary-dark);
+            font-size:2.5rem;
+            margin-top:0;
+            border-bottom:2px solid var(--primary-color);
+            padding-bottom:10px;
+        }
+        .price{
+            font-size:1.8rem;
+            color:var(--accent-dark);
+            font-weight:700;
+            margin:15px 0;
+        }
+        .meta-data p{
+            margin:5px 0;
+        }
+
+        .link-section a{
+            display:inline-flex;
+            align-items:center;
+            gap:5px;
+            margin-right:15px;
+            padding:10px 18px;
+            border-radius:6px;
+            text-decoration:none;
+            font-weight: 600;
+            transition:background-color .3s;
+            color:#fff;
+        }
+
+        .link-section .btn-download {
+            background: var(--primary-color);
+        }
+        .link-section .btn-play {
+            background: var(--accent-color);
+        }
+        .link-section .btn-download:hover {
+            background: var(--primary-dark);
+        }
+        .link-section .btn-play:hover {
+            background: var(--accent-dark);
+        }
+
+        .description-box{
+            margin-top:30px;
+            padding-top:20px;
+            border-top:1px solid var(--border-color);
+        }
+        .description-box h3 {
+            color: var(--text-dark);
+            margin-top: 0;
+        }
+
+        .message-box{
+            padding:15px;
+            margin-bottom:20px;
+            border-radius:8px;
+            font-weight:600;
+            text-align:center;
+        }
+        .message-box p {
+            margin: 0;
+        }
+        .success{
+            background:#d4edda;
+            color:#155724;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        @media (max-width: 768px) {
+            .detail-container{
+                margin: 20px;
+                padding: 20px;
+            }
+            .game-header{
+                flex-direction: column;
+                gap: 20px;
+            }
+            .game-image-box{
+                width: 100%;
+                height: 250px;
+            }
+            .game-details h1{
+                font-size: 2rem;
+            }
+            .link-section a {
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="top-header">
+    <a th:href="@{/home}" class="home-btn">
+        <i class="bi bi-arrow-left"></i> Vissza az Áruházba
+    </a>
+    <div sec:authorize="isAuthenticated()">
+        Bejelentkezve: <strong><span th:text="${#authentication.name}">USER</span></strong>
+    </div>
+</div>
+
+<div class="detail-container">
+
+    <div th:if="${successMessage}" class="message-box success">
+        <p th:text="${successMessage}"></p>
+    </div>
+    <div th:if="${errorMessage}" class="message-box error">
+        <p th:text="${errorMessage}"></p>
+    </div>
+
+    <div class="game-header">
+
+        <div class="game-image-box">
+            <img th:if="${game.image != null and game.image.length() > 0}"
+                 th:src="@{'/protected-images/' + ${game.image}}"
+                 th:alt="${game.name}"
+                 onerror="this.onerror=null; this.src='https://placehold.co/300x200/DDDDDD/666666?text=Kép+Hiányzik';"
+            />
+            <div th:unless="${game.image != null and game.image.length() > 0}">Kép Hiányzik</div>
+        </div>
+
+        <div class="game-details">
+            <h1 th:text="${game.name}">[Játék Neve]</h1>
+
+            <p class="price" th:text="${#numbers.formatDecimal(game.price, 0, 'POINT', 0, 'COMMA')} + ' Ft'"></p>
+
+            <div class="link-section">
+                <a th:href="@{'/download/' + ${game.id}}"
+                   class="action-btn btn-download">
+                    <i class="bi bi-cloud-arrow-down"></i> Letöltés
+                </a>
+
+                <a th:href="@{'/play/' + ${game.name}}"
+                   class="action-btn btn-play">
+                    <i class="bi bi-controller"></i> Játék Indítása
+                </a>
+            </div>
+
+            <div class="meta-data">
+                <p><strong>Fejlesztő:</strong> <span th:text="${game.developer}">Fejlesztő</span></p>
+                <p><strong>Kiadó:</strong> <span th:text="${game.publisher}">Kiadó</span></p>
+                <p><strong>Megjelenés:</strong> <span th:text="${#dates.format(game.relaseDate, 'yyyy. MM. dd.')}">2025.01.01.</span></p>
+                <p><strong>Címkék:</strong> <span th:text="${game.tags}">RPG, Fantasy</span></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="description-box">
+        <h3>Leírás</h3>
+        <p th:text="${game.description}">A játék teljes, részletes leírása itt található...</p>
+    </div>
+
+</div>
+
+</body>
+</html>

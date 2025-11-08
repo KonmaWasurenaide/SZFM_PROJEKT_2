@@ -1,6 +1,10 @@
 package com.ggames.GGames.Service.Impl;
 
+import com.ggames.GGames.Data.Entity.DownloadEntity;
+import com.ggames.GGames.Data.Entity.GameEntity;
 import com.ggames.GGames.Data.Entity.UserEntity;
+import com.ggames.GGames.Data.Repository.DownloadRepository;
+import com.ggames.GGames.Data.Repository.GameRepository;
 import com.ggames.GGames.Data.Repository.UserRepository;
 import com.ggames.GGames.Service.Dto.UserDto;
 import com.ggames.GGames.Service.UserService;
@@ -8,115 +12,122 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
- * A(z) {@code UserServiceImpl} osztály a {@link UserService} interfész implementációja.
- * <p>
- * Ez a szolgáltatás (Service) felelős a felhasználói adatok kezelésével kapcsolatos
- * üzleti logikáért, beleértve a regisztrációt és a hitelesítést.
- * </p>
+ * A {@code UserService} interfész implementációja, amely kezeli a felhasználói fiókokkal és a könyvtár logikájával kapcsolatos üzleti műveleteket.
+ *
+ * <p>Felelős a felhasználók regisztrációjáért, hitelesítéséért és a játékok felhasználói könyvtárhoz való hozzáadásáért/eltávolításáért.</p>
  */
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    /**
-     * A {@link UserRepository} a felhasználói entitások adatbázisban történő
-     * elérésére és mentésére szolgál.
-     */
     private final UserRepository userRepository;
-
-    /**
-     * A {@link PasswordEncoder} a jelszavak biztonságos hashelésére és
-     * a bejelentkezéskor történő összehasonlítására szolgál.
-     */
+    private final DownloadRepository downloadRepository;
+    private final GameRepository gameRepository;
     private final PasswordEncoder passwordEncoder;
-
-    /**
-     * A {@link ModelMapper} az entitások és DTO-k közötti adatátalakítást segíti.
-     */
     private final ModelMapper modelMapper;
 
     /**
-     * Regisztrál egy új felhasználót.
-     * <p>
-     * Végrehajtja a szükséges ellenőrzéseket (foglalt felhasználónév/e-mail,
-     * jelszó erőssége), titkosítja a jelszót, és elmenti az új {@link UserEntity}-t.
-     * </p>
+     * Megkeres egy felhasználó entitást a bejelentkezési név alapján.
      *
-     * @param userDto A regisztrálandó felhasználó adatait tartalmazó {@link UserDto}.
-     * @return A sikeresen regisztrált és elmentett {@link UserEntity}.
-     * @throws RuntimeException Ha a felhasználónév vagy az e-mail cím már foglalt.
+     * @param username A felhasználónév.
+     * @return A megtalált {@code UserEntity}.
+     * @throws RuntimeException Ha a felhasználó nem található.
+     */
+    private UserEntity findUserByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Felhasználó nem található: " + username));
+    }
+
+    /**
+     * Regisztrál egy új felhasználót, hasheli a jelszót, és ellenőrzi a felhasználónév egyediségét.
+     *
+     * @param userDto A regisztrációs adatátviteli objektum.
+     * @return Az elmentett {@code UserEntity}.
+     * @throws RuntimeException Ha a felhasználónév már foglalt.
      */
     @Override
+    @Transactional
     public UserEntity registerUser(UserDto userDto) {
         if (userRepository.findByUsername(userDto.getUsername()).isPresent()) {
-            throw new RuntimeException("A felhasználónév már foglalt.");
-        }
-        if (userRepository.findByEmail(userDto.getEmail()).isPresent()) {
-            throw new RuntimeException("Az email cím már foglalt.");
-        }
-
-        if (!isValidPassword(userDto.getPassword())) {
-            throw new RuntimeException("A jelszónak legalább 8 karakter hosszúnak kell lennie, és tartalmaznia kell kisbetűt, nagybetűt, számot és speciális karaktert.");
+            throw new RuntimeException("Username is already taken.");
         }
 
         UserEntity user = modelMapper.map(userDto, UserEntity.class);
-        // Jelszó titkosítása mentés előtt
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        // Alapértelmezett szerepkör beállítása, ha hiányzik
-        if (user.getRole() == null || user.getRole().isEmpty()) {
-            user.setRole("USER");
+        if (user.getUserRole() == null || user.getUserRole().isEmpty()) {
+            user.setUserRole("USER");
         }
         return userRepository.save(user);
     }
 
     /**
-     * Ellenőrzi a jelszó erősségi követelményeit.
-     * <p>
-     * Legalább 8 karakter hosszú, és tartalmaznia kell:
-     * <ul>
-     * <li>Nagybetűt (A-Z)</li>
-     * <li>Kisbetűt (a-z)</li>
-     * <li>Számot (0-9)</li>
-     * <li>Speciális karaktert</li>
-     * </ul>
-     * </p>
+     * Hitelesíti a felhasználó belépési adatait.
      *
-     * @param password Az ellenőrizendő jelszó.
-     * @return {@code true}, ha a jelszó megfelel a követelményeknek; egyébként {@code false}.
-     */
-    private boolean isValidPassword(String password) {
-        if (password == null || password.length() < 8) return false;
-
-        boolean hasUpper = password.matches(".*[A-Z].*");
-        boolean hasLower = password.matches(".*[a-z].*");
-        boolean hasDigit = password.matches(".*[0-9].*");
-        boolean hasSpecial = password.matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?].*");
-
-        return hasUpper && hasLower && hasDigit && hasSpecial;
-    }
-
-
-    /**
-     * Validates user credentials.
-     * Returns true if username exists and password matches, false otherwise.
-     * No details are shared to protect against spoofing.
-     * <p>
-     * Felhasználja az {@code org.mindrot.jbcrypt.BCrypt} könyvtárat
-     * a nyers jelszó és a hashelt jelszó összehasonlításához.
-     * </p>
-     *
-     * @param username The username to validate.
-     * @param password The raw password to check against the stored hash.
-     * @return {@code true} if the credentials are valid; {@code false} otherwise.
+     * @param username A felhasználónév.
+     * @param password A jelszó (hash-elés előtti).
+     * @return {@code true}, ha az adatok érvényesek; egyébként {@code false}.
      */
     @Override
     public boolean validateCredentials(String username, String password) {
         return userRepository.findByUsername(username)
-                .map(user -> org.mindrot.jbcrypt.BCrypt.checkpw(password, user.getPassword()))
+                .map(user -> passwordEncoder.matches(password, user.getPassword()))
                 .orElse(false);
     }
 
+    /**
+     * Hozzáad egy játékot a felhasználó könyvtárához, létrehozva a {@code DownloadEntity} bejegyzést.
+     *
+     * <p>Ellenőrzi, hogy a játék már a könyvtárban van-e, és lekéri a szükséges {@code GameEntity}-t.</p>
+     *
+     * @param username A felhasználó bejelentkezési neve.
+     * @param gameId A könyvtárhoz adandó játék azonosítója.
+     * @throws RuntimeException Ha a játék nem található.
+     */
+    @Override
+    @Transactional
+    public void addGameToUserLibrary(String username, Long gameId) {
+        UserEntity user = findUserByUsername(username);
+
+        GameEntity game = gameRepository.findById(gameId)
+                .orElseThrow(() -> new RuntimeException("Játék nem található: ID " + gameId));
+
+        boolean alreadyDownloaded = downloadRepository.existsByUserAndGame(user, game);
+
+
+        if (!alreadyDownloaded) {
+            DownloadEntity downloadEntry = new DownloadEntity();
+            downloadEntry.setUser(user);
+            downloadEntry.setGame(game);
+            downloadEntry.setDownload_date(LocalDate.now());
+
+            downloadRepository.save(downloadEntry);
+        }
+    }
+
+    /**
+     * Visszaadja a felhasználó által birtokolt (letöltött) játékok azonosítóit (ID-it) a könyvtár betöltéséhez.
+     *
+     * @param username A felhasználó bejelentkezési neve.
+     * @return A birtokolt játékok azonosítóinak listája.
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<Long> getUserOwnedGameIds(String username) {
+        UserEntity user = findUserByUsername(username);
+
+        List<DownloadEntity> downloads = downloadRepository.findByUser(user);
+
+        return downloads.stream()
+                .map(d -> d.getGame().getId())
+                .collect(Collectors.toList());
+    }
 }

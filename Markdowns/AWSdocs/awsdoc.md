@@ -9,6 +9,7 @@ A 8080-as portot figyeli egy springboot alkalmazás (Matyi), ami ubuntu service-
 - sudo systemctl (start stop restart status) ggames
 #### Pull and build
 `cd`
+`rm -rf SZFM_PROJEKT_2/`
 `git clone  https://github.com/KonmaWasurenaide/SZFM_PROJEKT_2.git`
 `mvn clean package -DskipTests`
 `sudo cp GGames-0.0.1-SNAPSHOT.jar /opt/ggames/app.jar`
@@ -22,3 +23,4 @@ A 8080-as portot figyeli egy springboot alkalmazás (Matyi), ami ubuntu service-
 
 #### troubleshooting
 - broken filelink in sites-enabled at nginx -- just remove it
+

@@ -4,7 +4,7 @@ Dátum: 2025.11.10, hétfő
 
 Résztvevők: Fazakas Mátyás, Bornemissza Ádám, Mátyás Zoltán, Kozicz Gergő
 
-Helyszín: Discord
+Helyszín: Személyes az óra keretén belül
 
 Tárgy: Tanár Úr ötlete
 

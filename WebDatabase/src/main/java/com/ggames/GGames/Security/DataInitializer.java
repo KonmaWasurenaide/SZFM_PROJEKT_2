@@ -42,7 +42,7 @@ public class DataInitializer {
                 System.out.println("Admin user created!");
             }
 
-            if (!userRepository.existsByUsername("testuser")) {
+            if (!userRepository.existsByUsername("user")) {
                 userRepository.save(UserEntity.builder()
                         .username("user")
                         .email("user@ggames.com")

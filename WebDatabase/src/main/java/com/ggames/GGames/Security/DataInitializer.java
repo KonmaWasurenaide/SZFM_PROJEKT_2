@@ -36,20 +36,20 @@ public class DataInitializer {
                 userRepository.save(UserEntity.builder()
                         .username("admin")
                         .email("admin@ggames.com")
-                        .password(passwordEncoder.encode("admin"))
+                        .password("$2a$10$gvi14Z5VcFRBRwos7b5FiuHpauKhmirdwt0o4HtPtu3VrnTNNIqd.")
                         .userRole("ADMIN")
                         .build());
-                System.out.println("Admin user created: admin / admin");
+                System.out.println("Admin user created!");
             }
 
             if (!userRepository.existsByUsername("testuser")) {
                 userRepository.save(UserEntity.builder()
                         .username("user")
                         .email("user@ggames.com")
-                        .password(passwordEncoder.encode("user"))
+                        .password("$2a$10$LqitC4qE6VVY/Da46mS6rOKBC9ztNpR13WHWJv4CupWafFrcUplhe")
                         .userRole("USER")
                         .build());
-                System.out.println("Test user created: user / user");
+                System.out.println("User user created!");
             }
         };
     }

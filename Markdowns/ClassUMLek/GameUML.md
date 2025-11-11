@@ -4,6 +4,7 @@
 #### PlantUML Script
 
 ```
+
 @startuml
 
 
@@ -13,20 +14,29 @@ class MonoBehaviour{
 }
 class GameManager{
    - TextMeshProUGUI scoreText
+   - TextMeshProUGUI highScoreText
    - TextMeshProUGUI timerText
    - GameObject pauseMenu
    - Animator pauseMenuAnimator
+   - GameObject gameOverMenu
+   - Animator gameOverMenuAnimator
+   - GameObject[] stars
    - float actualTime
    + float score
    + bool gameOver
    + bool isPaused
    
+   
    + void UpdateScore()
    + void UpdateTimer()
+   + void UpdateStars()
+   + void SaveHighScore(float score)
+   + float LoadHighScore()
    + void Restart()
    + void Pause()
    + void Resume()
    + void PauseManager()
+   + void GameOver()
    + void QuitToMainMenu()
 }
 
@@ -69,7 +79,7 @@ class CameraManager{
     - GameObject player
     - Vector3 offset
     - Quaternion playerRotation
-    
+    - void LateUpdate()
     - void UpdateCamera()
 }
 
@@ -80,7 +90,7 @@ class MenuCameraManager{
     - float lerpSpeed
     - float rotationSpeed
     - Vector3 newPosition
-    - Vector3 newRotation
+    - Quaternion newRotation
     
     - void Awake()
     - void FixedUpdate()
@@ -93,12 +103,63 @@ class MenuManager{
     + void Quit()
 }
 
+class EnemySpawnManager{
+    - GameObject police
+    - int starCount
+    - int policeCount
+    + Transform[] spawnPositions
+    
+    + void SpawnPolice()
+}
+
+class AgentScript{
+    - NavMeshAgent agent
+    - GameObject player
+    
+    + void ChasePlayer()
+}
+
+class GameOverManager{
+    - GameObject escapeTimerUI
+    - TextMeshProUGUI timerText
+    - GameManager gameManager
+    - int timer
+    - bool policeNear
+    - bool routineRuns
+    
+    + IEnumerator EscapeTimer()
+    - void OnTriggerEnter(Collider other)
+    - void OnTriggerStay(Collider other)
+    - void OnTriggerExit(Collider other)
+}
+
+class EnemyDespawnManager{
+    - GameObject police
+    - bool playerNear
+    
+    + IEnumerator DespawnCountDown()
+    + void OnTriggerEnter(Collider other)
+    + void OnTriggerExit(Collider other)
+}
+
+class CrashManager{
+    - AuidoSource audioSource
+    
+    - void OnCollisionEnter(Collision col)
+}
 MonoBehaviour <|-- GameManager
 MonoBehaviour <|-- MenuManager
 MonoBehaviour <|-- CameraManager
 MonoBehaviour <|-- MenuCameraManager
 MonoBehaviour <|-- PlayerController
+MonoBehaviour <|-- EnemySpawnManager
+MonoBehaviour <|-- AgentScript
+MonoBehaviour <|-- GameOverManager
+MonoBehaviour <|-- EnemyDespawnManager
+MonoBehaviour <|-- CrashManager
+GameOverManager ---> GameManager
 
 @enduml
+
 ```
 

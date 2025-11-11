@@ -9,3 +9,11 @@
 ### Pause Menu
 
 ![Pause Menu](/Markdowns/Images/PauseMenu.png)
+
+### "Busted in" timer
+
+!["Busted in" timer](/Markdowns/Images/BustedInTimer.png)
+
+### Busted
+
+![Busted](/Markdowns/Images/Busted.png)

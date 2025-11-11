@@ -8,8 +8,8 @@ public class GameOverManager : MonoBehaviour
 {
     [SerializeField] GameObject escapeTimerUI;
     [SerializeField] TextMeshProUGUI timerText;
-    GameManager gameManager;
-    int timer = 7;
+    private GameManager gameManager;
+    private int timer = 7;
     [SerializeField] bool policeNear;
     [SerializeField] bool routineRuns;
     
@@ -19,7 +19,7 @@ public class GameOverManager : MonoBehaviour
         escapeTimerUI.SetActive(false);
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
-    IEnumerator EscapeTimer()
+    public IEnumerator EscapeTimer()
     {
         routineRuns = true;
         Debug.Log("corut");

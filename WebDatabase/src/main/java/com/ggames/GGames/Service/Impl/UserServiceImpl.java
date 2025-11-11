@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -33,6 +34,18 @@ public class UserServiceImpl implements UserService {
     private final GameRepository gameRepository;
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
+
+    private static final String PASSWORD_PATTERN =
+            "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?*~$^/|]).{8,}$";
+    private static final Pattern pattern = Pattern.compile(PASSWORD_PATTERN);
+
+    private void validatePasswordStrength(String password) {
+        if (!pattern.matcher(password).matches()) {
+            throw new RuntimeException(
+                    "A jelszónak legalább 8 karakter hosszúnak kell lennie, és tartalmaznia kell legalább egy kisbetűt, egy nagybetűt, egy számot és egy speciális karaktert."
+            );
+        }
+    }
 
     /**
      * Megkeres egy felhasználó entitást a bejelentkezési név alapján.
@@ -59,6 +72,12 @@ public class UserServiceImpl implements UserService {
         if (userRepository.findByUsername(userDto.getUsername()).isPresent()) {
             throw new RuntimeException("Username is already taken.");
         }
+
+        if (userRepository.findByEmail(userDto.getEmail()).isPresent()) {
+            throw new RuntimeException("Az email cím már foglalt.");
+        }
+
+        validatePasswordStrength(userDto.getPassword());
 
         UserEntity user = modelMapper.map(userDto, UserEntity.class);
         user.setPassword(passwordEncoder.encode(user.getPassword()));

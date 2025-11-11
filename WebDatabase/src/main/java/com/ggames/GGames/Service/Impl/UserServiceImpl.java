@@ -130,4 +130,14 @@ public class UserServiceImpl implements UserService {
                 .map(d -> d.getGame().getId())
                 .collect(Collectors.toList());
     }
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<UserEntity> findByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<UserEntity> findById(Long id) {
+        return userRepository.findById(id);
+    }
 }

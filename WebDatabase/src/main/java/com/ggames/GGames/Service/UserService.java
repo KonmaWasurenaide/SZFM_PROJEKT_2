@@ -4,6 +4,7 @@ import com.ggames.GGames.Data.Entity.UserEntity;
 import com.ggames.GGames.Service.Dto.GameDto;
 import com.ggames.GGames.Service.Dto.UserDto;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Service interfész a felhasználókkal kapcsolatos üzleti logikához és adatkezelési műveletekhez.
@@ -44,4 +45,22 @@ public interface UserService {
      * @return A birtokolt játékok azonosítóinak listája.
      */
     List<Long> getUserOwnedGameIds(String username);
+
+    /**
+     * Megkeresi a felhasználó entitást a felhasználónév alapján.
+     * Ez a metódus szolgálja ki a Controllereket a hitelesített felhasználó lekéréséhez.
+     *
+     * @param username A hitelesítésből származó felhasználónév.
+     * @return Az opcionális UserEntity objektum.
+     */
+    Optional<UserEntity> findByUsername(String username);
+
+    /**
+     * ÚJ METÓDUS: Megkeresi a felhasználó entitást az azonosító (ID) alapján.
+     * Szükséges a chat partner nevének lekéréséhez a Controllerben.
+     *
+     * @param id A keresett felhasználó ID-ja.
+     * @return Az opcionális UserEntity objektum.
+     */
+    Optional<UserEntity> findById(Long id);
 }

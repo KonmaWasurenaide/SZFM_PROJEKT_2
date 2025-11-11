@@ -3,13 +3,11 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-width=1.0">
     <title>Főoldal - KuspGames Játék Áruház</title>
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <style>
-
-
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
         :root {
             --primary-color:#4CAF50;
@@ -51,44 +49,129 @@
         .user-controls-container{
             display:flex;
             align-items:center;
-            gap:15px;
+            gap: 25px;
+            position: relative;
         }
 
-        .admin-btn, .library-btn{
-            padding:8px 15px;
-            border-radius:6px;
-            text-decoration:none;
-            font-weight:600;
-            transition:background-color .3s;
-            color:#fff;
-            display: inline-flex;
+        .notification-btn {
+            background: none;
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
             align-items: center;
-            gap: 5px;
+            color: var(--text-dark);
+            font-size: 1.2rem;
+            text-decoration: none;
+            transition: background-color 0.2s;
         }
-        .library-btn{
-            background:var(--primary-dark);
-        }
-        .library-btn:hover{
-            background:#2a7330;
-        }
-        .admin-btn{
-            background:var(--accent-color);
-        }
-        .admin-btn:hover{
-            background:var(--accent-dark);
+        .notification-btn:hover {
+            background-color: #eee;
         }
 
-        .logout-form{
-            display:inline;
+        .user-dropdown {
+            position: relative;
+            display: inline-block;
         }
-        .logout-btn{
-            background:none;
-            border:none;
-            text-decoration:underline;
-            cursor:pointer;
-            font-weight:600;
-            padding:0;
+
+        .dropdown-toggle {
+            background: var(--primary-color);
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color .3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1rem;
+        }
+        .dropdown-toggle:hover {
+            background: var(--primary-dark);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            z-index: 1000;
+            background: var(--header-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            min-width: 220px;
+            padding: 5px 0;
+            margin-top: 5px;
+            display: none;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+        }
+
+        .user-dropdown.active .dropdown-menu {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            text-decoration: none;
             color: var(--text-dark);
+            font-size: 0.95rem;
+            transition: background-color 0.2s;
+            font-weight: 400;
+            white-space: nowrap;
+        }
+        .dropdown-item i {
+            margin-right: 8px;
+            color: var(--primary-dark);
+        }
+        .dropdown-item:hover {
+            background-color: var(--background-light);
+        }
+
+        .dropdown-item.admin-item i {
+            color: var(--accent-color);
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            margin: 5px 0;
+            overflow: hidden;
+            background-color: var(--border-color);
+        }
+
+        .logout-form-item {
+            padding: 0;
+        }
+        .logout-btn-dropdown {
+            background: none;
+            border: none;
+            width: 100%;
+            text-align: left;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-weight: 400;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+            transition: background-color 0.2s;
+        }
+        .logout-btn-dropdown:hover {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .logout-btn-dropdown i {
+            color: #721c24;
         }
 
         .main-content{
@@ -237,10 +320,6 @@
                 justify-content:center;
                 flex-wrap: wrap;
             }
-            .admin-btn, .library-btn {
-                padding: 6px 10px;
-                font-size: 0.9rem;
-            }
             .game-section-title{
                 font-size:1.6rem;
             }
@@ -256,23 +335,50 @@
 
     <div class="user-controls-container" sec:authorize="isAuthenticated()">
 
-        <a th:href="@{/library}" class="library-btn">
-            <i class="bi bi-book"></i> Saját Könyvtár
+        <a th:href="@{/notifications}" class="notification-btn" title="Értesítések">
+            <i class="bi bi-bell"></i>
         </a>
 
-        <div sec:authorize="hasAuthority('ROLE_ADMIN')">
-            <a th:href="@{/admin/add-game}" class="admin-btn">
-                <i class="bi bi-gear"></i> Adminisztráció
-            </a>
-        </div>
+        <div class="user-dropdown" id="userDropdown">
+            <button class="dropdown-toggle" id="userMenuToggle">
+                <i class="bi bi-person-circle"></i>
+                <span th:text="${#authentication.name}">USER</span>
+                <i class="bi bi-caret-down-fill"></i>
+            </button>
 
-        <div class="user-status-text">
-            Bejelentkezve: <strong><span th:text="${#authentication.name}">USER</span></strong>
-            <form th:action="@{/logout}" method="post" class="logout-form">
-                (<button type="submit" class="logout-btn">Kijelentkezés</button>)
-            </form>
+            <div class="dropdown-menu" id="userDropdownMenu">
+
+                <a th:href="@{/friends/list}" class="dropdown-item">
+                    <i class="bi bi-chat-dots-fill"></i> Barátaim és Chat
+                </a>
+
+                <a th:href="@{/friends}" class="dropdown-item">
+                    <i class="bi bi-people-fill"></i> Barátok Keresése
+                </a>
+
+                <div class="dropdown-divider"></div>
+
+                <a th:href="@{/library}" class="dropdown-item">
+                    <i class="bi bi-book"></i> Saját Könyvtár
+                </a>
+
+                <div sec:authorize="hasAuthority('ROLE_ADMIN')">
+                    <a th:href="@{/admin/add-game}" class="dropdown-item admin-item">
+                        <i class="bi bi-gear"></i> Adminisztráció
+                    </a>
+                </div>
+
+                <div class="dropdown-divider"></div>
+
+                <form th:action="@{/logout}" method="post" class="dropdown-item logout-form-item">
+                    <button type="submit" class="logout-btn-dropdown">
+                        <i class="bi bi-box-arrow-right"></i> Kijelentkezés
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
+
 </div>
 
 <div class="main-content">
@@ -327,6 +433,24 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const toggleButton = document.getElementById('userMenuToggle');
+        const userDropdown = document.getElementById('userDropdown');
+
+        if (toggleButton) {
+            toggleButton.addEventListener('click', function() {
+                userDropdown.classList.toggle('active');
+            });
+        }
+        document.addEventListener('click', function(event) {
+            if (userDropdown && !userDropdown.contains(event.target)) {
+                userDropdown.classList.remove('active');
+            }
+        });
+    });
+</script>
 
 </body>
 </html>

@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Barátok Keresése</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <style>
+
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        :root {
+            --primary-color:#4CAF50;
+            --primary-dark:#388E3C;
+            --background-light:#f4f7f6;
+            --text-dark:#333;
+            --accent-color:#FF9800;
+            --accent-dark:#e68900;
+            --header-bg:#fff;
+            --border-color:#eee;
+            --error-bg: #f8d7da;
+            --error-color: #721c24;
+            --success-bg: #d4edda;
+            --success-color: #155724;
+        }
+        body{
+            font-family:'Inter',sans-serif;
+            margin:0;
+            padding:0;
+            background:var(--background-light);
+            color:var(--text-dark);
+        }
+        a {
+            text-decoration: none;
+        }
+
+        .top-header{
+            background:var(--header-bg);
+            padding:20px 40px;
+            border-bottom:1px solid var(--border-color);
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+        }
+        .header-left{
+            display:flex;
+            align-items:center;
+            gap:25px;
+        }
+        .site-title{
+            color:var(--primary-dark);
+            font-weight:700;
+            font-size:1.8rem;
+            margin:0;
+        }
+        .user-controls-container{
+            display:flex;
+            align-items:center;
+            gap:20px;
+            position: relative;
+        }
+
+        .notification-btn {
+            background: none;
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-dark);
+            font-size: 1.2rem;
+            transition: background-color 0.2s, color 0.2s;
+            position: relative;
+        }
+        .notification-btn:hover {
+            background-color: var(--background-light);
+            color: var(--primary-dark);
+        }
+
+
+        .user-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .dropdown-toggle {
+            background: var(--primary-color);
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color .3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1rem;
+            line-height: 1;
+        }
+        .dropdown-toggle:hover {
+            background: var(--primary-dark);
+        }
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 5px);
+            right: 0;
+            z-index: 1000;
+            background: var(--header-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            min-width: 230px;
+            padding: 5px 0;
+            display: none;
+            opacity: 0;
+            transform: translateY(-5px);
+            transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+        }
+        .user-dropdown.active .dropdown-menu {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            text-decoration: none;
+            color: var(--text-dark);
+            font-size: 0.95rem;
+            transition: background-color 0.2s;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        .dropdown-item i {
+            margin-right: 10px;
+            color: var(--primary-dark);
+        }
+        .dropdown-item:hover {
+            background-color: var(--background-light);
+        }
+        .dropdown-item.admin-item i {
+            color: var(--accent-color);
+        }
+        .dropdown-divider {
+            height: 1px;
+            margin: 5px 0;
+            background-color: var(--border-color);
+        }
+        .logout-form-item {
+            padding: 0;
+        }
+        .logout-btn-dropdown {
+            background: none;
+            border: none;
+            width: 100%;
+            text-align: left;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.95rem;
+            transition: background-color 0.2s;
+        }
+        .logout-btn-dropdown:hover {
+            background-color: var(--error-bg);
+            color: var(--error-color);
+        }
+        .logout-btn-dropdown i {
+            color: var(--error-color);
+        }
+
+
+        .main-content{
+            max-width:1200px;
+            margin:40px auto;
+            padding:0 20px;
+        }
+        .game-section-title{
+            border-bottom:2px solid var(--primary-color);
+            padding-bottom:10px;
+            margin-bottom:30px;
+            font-size:2rem;
+            color: var(--primary-dark);
+        }
+
+        .message-box{
+            padding:15px;
+            margin-bottom:20px;
+            border-radius:8px;
+            font-weight:600;
+            text-align:center;
+        }
+        .message-box p {
+            margin: 0;
+        }
+        .success{
+            background:var(--success-bg);
+            color:var(--success-color);
+            border:1px solid #c3e6cb;
+        }
+        .error{
+            background:var(--error-bg);
+            color:var(--error-color);
+            border:1px solid #f5c6cb;
+        }
+
+        .user-search-container {
+            margin-bottom: 20px;
+        }
+        .user-search-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+        .user-search-input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+        .user-list {
+            list-style: none;
+            padding: 0;
+        }
+        .user-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--header-bg);
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .user-username {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--text-dark);
+            flex-grow: 1;
+        }
+        .send-request-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+            text-decoration: none;
+            font-size: 0.95rem;
+            background: var(--primary-color);
+            color: #fff;
+        }
+        .send-request-btn:hover {
+            background: var(--primary-dark);
+        }
+        .sent-btn {
+            background: #ccc;
+            color: #666;
+            cursor: default;
+        }
+
+
+        @media (max-width: 768px) {
+            .top-header{ padding:15px 20px; }
+            .user-item {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 12px;
+                gap: 10px;
+            }
+        }
+        @media (max-width: 600px) {
+            .top-header{ flex-direction:column; gap:15px; }
+            .header-left{ width:100%; justify-content:space-between; }
+            .user-controls-container{ width:100%; justify-content:space-around; flex-wrap: nowrap; }
+            .dropdown-toggle { padding: 8px 12px; font-size: 0.9rem; }
+            .dropdown-menu { min-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="top-header">
+    <div class="header-left">
+        <h1 class="site-title">KuspGames Játék Áruház</h1>
+    </div>
+
+    <div class="user-controls-container" sec:authorize="isAuthenticated()">
+
+        <a th:href="@{/notifications}" class="notification-btn" title="Értesítések">
+            <i class="bi bi-bell"></i>
+        </a>
+
+        <div class="user-dropdown" id="userDropdownFriends">
+            <button class="dropdown-toggle" id="userMenuToggleFriends">
+                <i class="bi bi-person-circle"></i>
+                <span th:text="${#authentication.name}">USER</span>
+                <i class="bi bi-caret-down-fill"></i>
+            </button>
+
+            <div class="dropdown-menu" id="userDropdownMenuFriends">
+                <a th:href="@{/friends}" class="dropdown-item">
+                    <i class="bi bi-people-fill"></i> Barátok & Keresés
+                </a>
+                <div class="dropdown-divider"></div>
+                <a th:href="@{/library}" class="dropdown-item">
+                    <i class="bi bi-book"></i> Saját Könyvtár
+                </a>
+                <div sec:authorize="hasAuthority('ROLE_ADMIN')">
+                    <a th:href="@{/admin/add-game}" class="dropdown-item admin-item">
+                        <i class="bi bi-gear"></i> Adminisztráció
+                    </a>
+                </div>
+                <div class="dropdown-divider"></div>
+                <form th:action="@{/logout}" method="post" class="dropdown-item logout-form-item">
+                    <button type="submit" class="logout-btn-dropdown">
+                        <i class="bi bi-box-arrow-right"></i> Kijelentkezés
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="main-content">
+    <h2 class="game-section-title">👤 Barátok Keresése</h2>
+
+    <div id="statusMessage" class="message-box" style="display:none;"></div>
+
+    <div class="user-search-container">
+        <input type="text" id="searchInput" class="user-search-input" placeholder="Keress felhasználónévre..." onkeyup="filterUsers()">
+    </div>
+
+    <ul class="user-list" id="userList">
+        <li th:each="user : ${suggestableUsers}" class="user-item" th:id="'user-' + ${user.id}">
+            <span class="user-username" th:text="${user.username}">PéldaFelhasználó</span>
+            <button class="send-request-btn"
+                    th:data-user-id="${user.id}"
+                    onclick="sendRequest(this)">
+                <i class="bi bi-person-plus-fill"></i> Barátnak jelölés
+            </button>
+        </li>
+    </ul>
+
+    <div th:if="${#lists.isEmpty(suggestableUsers)}" class="message-box">
+        <p>Nincs több barátnak jelölhető felhasználó, vagy már mindenkivel van kapcsolatod.</p>
+    </div>
+
+</div>
+
+<script th:inline="javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+        const toggleButton = document.getElementById('userMenuToggleFriends');
+        const userDropdown = document.getElementById('userDropdownFriends');
+
+        if (toggleButton) {
+            toggleButton.addEventListener('click', function() {
+                userDropdown.classList.toggle('active');
+            });
+        }
+        document.addEventListener('click', function(event) {
+            if (userDropdown && !userDropdown.contains(event.target)) {
+                userDropdown.classList.remove('active');
+            }
+        });
+    });
+
+    const SEND_REQUEST_URL = '/api/users/send-request/';
+    const csrfToken = document.querySelector('meta[name="_csrf"]').content;
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
+
+    function sendRequest(button) {
+        const receiverId = button.getAttribute('data-user-id');
+        const url = SEND_REQUEST_URL + receiverId;
+        const statusMessageDiv = document.getElementById('statusMessage');
+
+        let headers = {
+            'Content-Type': 'application/json',
+        };
+        headers[csrfHeader] = csrfToken;
+
+        fetch(url, {
+            method: 'POST',
+            headers: headers
+        })
+            .then(response => response.json().then(data => ({ ok: response.ok, data })))
+            .then(result => {
+                statusMessageDiv.style.display = 'block';
+                if (result.ok) {
+                    statusMessageDiv.className = 'message-box success';
+                    statusMessageDiv.innerHTML = '<p>' + result.data.message + '</p>';
+
+                    button.innerText = 'Kérelem elküldve';
+                    button.className = 'send-request-btn sent-btn';
+                    button.disabled = true;
+                } else {
+                    statusMessageDiv.className = 'message-box error';
+                    statusMessageDiv.innerHTML = '<p>⚠️ Hiba: ' + (result.data.error || "Ismeretlen hiba.") + '</p>';
+                }
+            })
+            .catch(error => {
+                statusMessageDiv.style.display = 'block';
+                statusMessageDiv.className = 'message-box error';
+                statusMessageDiv.innerHTML = '<p>⚠️ Hiba a kérelem küldésekor (Hálózati hiba). ' + error + '</p>';
+            });
+    }
+
+    function filterUsers() {
+        const filter = document.getElementById('searchInput').value.toLowerCase();
+        const list = document.getElementById('userList');
+        const items = list.getElementsByTagName('li');
+
+        for (let i = 0; i < items.length; i++) {
+            const usernameElement = items[i].querySelector('.user-username');
+            const username = usernameElement.textContent || usernameElement.innerText;
+            items[i].style.display = (username.toLowerCase().indexOf(filter) > -1) ? "" : "none";
+        }
+    }
+</script>
+</body>
+</html>

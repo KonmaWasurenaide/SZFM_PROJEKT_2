@@ -21,7 +21,7 @@ public class EnemyDespawnManager : MonoBehaviour
     }
 
 
-    IEnumerator DespawnCountDown()
+    public IEnumerator DespawnCountDown()
     {
         //int random = Random.Range(0, enemyManager.spawnPositions.Length);
         int timer = 10;

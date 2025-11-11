@@ -5,7 +5,7 @@ using UnityEngine;
 public class EnemySpawnManager : MonoBehaviour
 {
 
-    GameManager gameManager;
+    
     [SerializeField] GameObject police;
     [SerializeField] int starCount;
     [SerializeField] int policeCount;
@@ -13,7 +13,7 @@ public class EnemySpawnManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        gameManager = GetComponent<GameManager>();
+        
     }
 
     // Update is called once per frame

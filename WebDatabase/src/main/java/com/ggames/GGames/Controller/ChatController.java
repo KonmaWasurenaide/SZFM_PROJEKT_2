@@ -32,7 +32,6 @@ public class ChatController {
                 chatMessage
         );
 
-        // Saját ablak frissítése
         messagingTemplate.convertAndSendToUser(
                 sender,
                 "/queue/messages",

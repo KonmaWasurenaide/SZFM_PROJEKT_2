@@ -47,3 +47,9 @@
 | Cím | UserStory | Elfogadási kritérium|Sprint |
 |-----|-----------|---------------------|---------|
 |SoundFX & Music| **Given:** Játékosként azt szeretném, hogy a hangulatot egy jó főmenű zene adja meg. Tudjam, hogy mikor vannak a közelemben a zsernyákok, ezért csengjen a fülemben az irritáló szirénájuk. Ez által tudjam, hogy mikor kell a gázra taposni. Valamint fontos, hogyha ütközés történik, akkor az hangilag is érezhető legyen. | **When:** Amig a főmenűben vagyunk addig valamilyen aláfestő zene legyen, mindaddig mig a játék el nem kezdődik. **Then:** Ha közel kerűl a rendőr a playerhez, akkor lehessen hallani a sziréna hangját. Bármilyen CollisionEnter-nél egy ütközés hang játszodjon le de fontos, hogy esetleges bugok esetén, többszörösen ne tudjon elindulni a Sound Effect. |Sprint #5 |
+
+# User Story #6 (WEB)
+
+| Cím | UserStory | Elfogadási kritérium|Sprint |
+|-----|-----------|---------------------|---------|
+| NLP Search Motor | Mint felhasználó azt szeretném, a játékkönyvtárban lehetőség legyen valami AI-al megspékelt keresésre, hogy könnyeben megtalálhassam a számomra alkalmas játékokat. Egy rövid leirás alapján, adja ki azokat a játékot/játékokat ami leginkább illeszkednek a leirásomra. | Kell egy adatállomány, ami minden játékról, ad egy közel 50 soros leirást. Erre az adatállományra betanitunk egy meglévő NLP transformer modellt, ami több nyelvű működésre képes. A hosszó leirást Sentence-Bert api-val mondatokra szedjűk, ezt tokenizáljuk, valamint létrehozzuk a mondatok beágyazott(embedding) vektorját. Igy a modellünk a rövid leirás alapján, megkeresi, hogy melyik mondatra illeszkedik a legjobban egy softmax aktivációs függvény segitségével. Ezt a modellt exportálni kell és integrálni a Java Backendbe, úgy hogy tudjon hozzá kéréseket intézni, és tudjanak együtt kommunikálni. | Sprint #6-7 |

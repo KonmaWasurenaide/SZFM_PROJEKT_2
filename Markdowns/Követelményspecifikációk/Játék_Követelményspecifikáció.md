@@ -1,6 +1,6 @@
 # KÖVETELMÉNYSPECIFIKÁCIÓ
 ## 1. Bevezetés
-A jelen dokumentum egy 3D-s, autós üldözésen alapuló játék (továbbiakban: a Rendszer) követelményeit, célját, működését és üzleti folyamatait írja le. A játék alapja, hogy a játékos egy városi környezetben szabadon közlekedhet, miközben NavMesh alapú mesterséges intelligenciával (AI) működő rendőrautók folyamatosan üldözik. A játék célja minél tovább túlélni, elkerülve a rendőrségi elfogást, miközben a játékos pontot szerez az eltelt idő és a túlélés alapján.
+A jelen dokumentum egy 3D-s, autós üldözésen alapuló játék követelményeit, célját, működését és üzleti folyamatait írja le. A játék alapja, hogy a játékos egy városi környezetben szabadon közlekedhet, miközben NavMesh alapú mesterséges intelligenciával (AI) működő rendőrautók folyamatosan üldözik. A játék célja minél tovább túlélni, elkerülve a rendőrségi elfogást, miközben a játékos pontot szerez az eltelt idő és a túlélés alapján.
 
 
 ## 2. Jelenlegi helyzet leírása
@@ -78,7 +78,7 @@ A játékfejlesztésre közvetlen állami rendelet nem vonatkozik, azonban az al
 | K-16 | Game Over logika | A visszaszámláló lejárta után Game Over képernyő jelenjen meg újrakezdés és menü opcióval. | Funkcionális | Magas | v0.7 |
 | K-17 | Menü háttérzene | A főmenüben háttérzene szóljon. | Nem funkcionális | Alacsony | v0.8 |
 | K-18 | Atmoszférikus sziréna hang | A rendőrautók közeledésekor szirénahang induljon el. | Funkcionális | Közepes | v0.8 |
-| K-19 | Hanghatások támogatása | A játék futása során hanghatások legyenek (motor, ütközés, sziréna). | Nem funkcionális | Közepes | v0.8 |
+| K-19 | Hanghatások | A játék futása során hanghatások legyenek (motor, ütközés, sziréna). | Nem funkcionális | Közepes | v0.8 |
 | K-20 | Újrajátszhatóság | A játék legyen újrajátszható, betöltési idő minimális legyen. | Nem funkcionális | Közepes | v0.5 |
 | K-21 | Pénz gyűjtés | A játék során a felhasználó tudjon pénz gyűjteni, amiket pályán tud felvenni | Funckiónális | Alacsony | v1.2 |
 | K-22 | Mini map | A UI felületen jelenjen meg egy kis méretű térkép amelyen információt nyerhetünk a játékos és rendőrök pozicíójáról | Funkciónális | Alacsony | v1.3 |

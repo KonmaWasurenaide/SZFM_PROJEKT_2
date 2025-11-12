@@ -21,7 +21,7 @@ public interface FriendshipService {
 
     List<UserSuggestDto> getSuggestableUsers(UserEntity currentUser);
 
-    List<Long> getConnectedUserIds(UserEntity currentUser);
-
     List<FriendDto> getFriends(UserEntity currentUser);
+
+    int countPendingRequests(UserEntity receiver);
 }

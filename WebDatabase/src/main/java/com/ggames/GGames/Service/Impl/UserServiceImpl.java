@@ -4,6 +4,7 @@ import com.ggames.GGames.Data.Entity.DownloadEntity;
 import com.ggames.GGames.Data.Entity.GameEntity;
 import com.ggames.GGames.Data.Entity.UserEntity;
 import com.ggames.GGames.Data.Repository.DownloadRepository;
+import com.ggames.GGames.Data.Repository.FriendshipRepository;
 import com.ggames.GGames.Data.Repository.GameRepository;
 import com.ggames.GGames.Data.Repository.UserRepository;
 import com.ggames.GGames.Service.Dto.UserDto;
@@ -30,6 +31,7 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final FriendshipRepository friendshipRepository;
     private final DownloadRepository downloadRepository;
     private final GameRepository gameRepository;
     private final PasswordEncoder passwordEncoder;

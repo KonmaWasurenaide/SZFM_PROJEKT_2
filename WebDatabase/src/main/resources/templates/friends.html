@@ -80,6 +80,29 @@
             color: var(--primary-dark);
         }
 
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--accent-color);
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            min-width: 18px;
+            height: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            line-height: 1;
+            box-shadow: 0 0 0 2px var(--header-bg);
+        }
+        .notification-badge.two-digits {
+            border-radius: 10px;
+            padding: 2px 4px;
+            min-width: 24px;
+        }
 
         .user-dropdown {
             position: relative;
@@ -269,6 +292,36 @@
             cursor: default;
         }
 
+        .home-btn {
+            background: none;
+            color: var(--primary-dark);
+            padding: 10px 15px;
+            border: 1px solid var(--primary-dark);
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color .2s, color .2s, border-color .2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1rem;
+            line-height: 1;
+        }
+
+        .home-btn:hover {
+            background: var(--primary-dark);
+            color: var(--header-bg);
+            border-color: var(--primary-dark);
+        }
+
+        .home-btn i {
+            font-size: 1.1rem;
+            color: var(--primary-dark);
+        }
+        .home-btn:hover i {
+            color: var(--header-bg);
+        }
+
 
         @media (max-width: 768px) {
             .top-header{ padding:15px 20px; }
@@ -277,6 +330,12 @@
                 align-items: flex-start;
                 padding: 12px;
                 gap: 10px;
+            }
+            .home-btn {
+                padding: 8px 10px;
+            }
+            .home-btn span {
+                display: none;
             }
         }
         @media (max-width: 600px) {
@@ -292,36 +351,55 @@
 
 <div class="top-header">
     <div class="header-left">
-        <h1 class="site-title">KuspGames Játék Áruház</h1>
+        <a th:href="@{/home}" class="home-btn" title="Vissza a főoldalra">
+            <i class="bi bi-arrow-left"></i> Vissza az Áruházba
+        </a>
+        <h1 class="site-title" style="margin-left: 15px;">KuspGames Játék Áruház</h1>
     </div>
 
     <div class="user-controls-container" sec:authorize="isAuthenticated()">
 
         <a th:href="@{/notifications}" class="notification-btn" title="Értesítések">
             <i class="bi bi-bell"></i>
+            <span th:if="${pendingRequestCount != null and pendingRequestCount > 0}"
+                  class="notification-badge"
+                  th:classappend="${pendingRequestCount > 9 ? 'two-digits' : ''}"
+                  th:text="${pendingRequestCount}">
+            1
+            </span>
         </a>
 
-        <div class="user-dropdown" id="userDropdownFriends">
-            <button class="dropdown-toggle" id="userMenuToggleFriends">
+        <div class="user-dropdown" id="userDropdown">
+            <button class="dropdown-toggle" id="userMenuToggle">
                 <i class="bi bi-person-circle"></i>
                 <span th:text="${#authentication.name}">USER</span>
                 <i class="bi bi-caret-down-fill"></i>
             </button>
 
-            <div class="dropdown-menu" id="userDropdownMenuFriends">
-                <a th:href="@{/friends}" class="dropdown-item">
-                    <i class="bi bi-people-fill"></i> Barátok & Keresés
+            <div class="dropdown-menu" id="userDropdownMenu">
+
+                <a th:href="@{/friends/list}" class="dropdown-item">
+                    <i class="bi bi-chat-dots-fill"></i> Barátaim és Chat
                 </a>
+
+                <a th:href="@{/friends}" class="dropdown-item">
+                    <i class="bi bi-people-fill"></i> Barátok Keresése
+                </a>
+
                 <div class="dropdown-divider"></div>
+
                 <a th:href="@{/library}" class="dropdown-item">
                     <i class="bi bi-book"></i> Saját Könyvtár
                 </a>
+
                 <div sec:authorize="hasAuthority('ROLE_ADMIN')">
                     <a th:href="@{/admin/add-game}" class="dropdown-item admin-item">
                         <i class="bi bi-gear"></i> Adminisztráció
                     </a>
                 </div>
+
                 <div class="dropdown-divider"></div>
+
                 <form th:action="@{/logout}" method="post" class="dropdown-item logout-form-item">
                     <button type="submit" class="logout-btn-dropdown">
                         <i class="bi bi-box-arrow-right"></i> Kijelentkezés
@@ -357,10 +435,10 @@
 
 </div>
 
-<script th:inline="javascript">
+<script>
     document.addEventListener('DOMContentLoaded', function() {
-        const toggleButton = document.getElementById('userMenuToggleFriends');
-        const userDropdown = document.getElementById('userDropdownFriends');
+        const toggleButton = document.getElementById('userMenuToggle');
+        const userDropdown = document.getElementById('userDropdown');
 
         if (toggleButton) {
             toggleButton.addEventListener('click', function() {
@@ -373,7 +451,6 @@
             }
         });
     });
-
     const SEND_REQUEST_URL = '/api/users/send-request/';
     const csrfToken = document.querySelector('meta[name="_csrf"]').content;
     const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
@@ -395,6 +472,11 @@
             .then(response => response.json().then(data => ({ ok: response.ok, data })))
             .then(result => {
                 statusMessageDiv.style.display = 'block';
+
+                setTimeout(() => {
+                    statusMessageDiv.style.display = 'none';
+                }, 5000);
+
                 if (result.ok) {
                     statusMessageDiv.className = 'message-box success';
                     statusMessageDiv.innerHTML = '<p>' + result.data.message + '</p>';
@@ -404,13 +486,17 @@
                     button.disabled = true;
                 } else {
                     statusMessageDiv.className = 'message-box error';
-                    statusMessageDiv.innerHTML = '<p>⚠️ Hiba: ' + (result.data.error || "Ismeretlen hiba.") + '</p>';
+                    statusMessageDiv.innerHTML = '<p>Hiba: ' + (result.data.error || "Ismeretlen hiba.") + '</p>';
                 }
             })
             .catch(error => {
                 statusMessageDiv.style.display = 'block';
+                setTimeout(() => {
+                    statusMessageDiv.style.display = 'none';
+                }, 8000);
                 statusMessageDiv.className = 'message-box error';
-                statusMessageDiv.innerHTML = '<p>⚠️ Hiba a kérelem küldésekor (Hálózati hiba). ' + error + '</p>';
+                statusMessageDiv.innerHTML = '<p>Hiba a kérelem küldésekor (Hálózati hiba). Kérlek ellenőrizd a konzolt (F12) a részletekért.</p>';
+                console.error("Fetch hiba:", error);
             });
     }
 

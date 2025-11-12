@@ -28,7 +28,18 @@ public class FriendshipPageController {
 
     @GetMapping("/friends")
     public String showFriendsPage(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+
         UserEntity currentUser = getCurrentUser(userDetails);
+
+        try {
+            int pendingCount = friendshipService.countPendingRequests(currentUser);
+            model.addAttribute("pendingRequestCount", pendingCount);
+
+        } catch (Exception e) {
+            model.addAttribute("pendingRequestCount", 0);
+            System.err.println("Hiba a barátkérések számolása közben (Friends): " + e.getMessage());
+        }
+
         model.addAttribute("suggestableUsers", friendshipService.getSuggestableUsers(currentUser));
 
         return "friends";
@@ -44,10 +55,25 @@ public class FriendshipPageController {
 
     @GetMapping("/friends/list")
     public String showFriendsListPage(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+
         UserEntity currentUser = getCurrentUser(userDetails);
+
+        // --- Értesítések számlálása ---
+        try {
+            // Barátkérések számának lekérése
+            int pendingCount = friendshipService.countPendingRequests(currentUser);
+            model.addAttribute("pendingRequestCount", pendingCount);
+
+        } catch (Exception e) {
+            // Hiba esetén nulla kérés, hogy ne törjön össze az oldal
+            model.addAttribute("pendingRequestCount", 0);
+            System.err.println("Hiba a barátkérések számolása közben (Friends List): " + e.getMessage());
+        }
+        // -----------------------------
+
         model.addAttribute("friends", friendshipService.getFriends(currentUser));
 
-        return "friends_list";
+        return "friends_list"; // Sablon neve
     }
     @GetMapping("/chat/{friendId}")
     public String showChatRoom(@AuthenticationPrincipal UserDetails userDetails,

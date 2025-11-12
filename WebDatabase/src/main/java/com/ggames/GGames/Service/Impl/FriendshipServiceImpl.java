@@ -31,24 +31,8 @@ public class FriendshipServiceImpl implements FriendshipService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Long> getConnectedUserIds(UserEntity currentUser) {
-        Stream<FriendshipEntity> sent = friendshipRepository.findBySender(currentUser).stream();
-        Stream<FriendshipEntity> received = friendshipRepository.findByReceiver(currentUser).stream();
-
-        List<Long> connectedUserIds = Stream.concat(sent, received)
-                .map(f -> f.getSender().getId().equals(currentUser.getId()) ? f.getReceiver().getId() : f.getSender().getId())
-                .distinct()
-                .collect(Collectors.toList());
-
-        connectedUserIds.add(currentUser.getId());
-        return connectedUserIds;
-    }
-
-    @Override
-    @Transactional(readOnly = true)
     public List<UserSuggestDto> getSuggestableUsers(UserEntity currentUser) {
-        List<Long> connectedIds = getConnectedUserIds(currentUser);
-        List<UserEntity> suggestableUsers = userRepository.findSuggestableUsers(connectedIds);
+        List<UserEntity> suggestableUsers = friendshipRepository.findSuggestableUsers(currentUser.getId());
 
         return suggestableUsers.stream()
                 .map(UserSuggestDto::fromEntity)
@@ -113,17 +97,14 @@ public class FriendshipServiceImpl implements FriendshipService {
         return friendshipRepository.save(request);
     }
 
-    @Override
-    @Transactional
     public void rejectFriendRequest(UserEntity receiver, Long requestId) throws FriendshipException {
         FriendshipEntity request = friendshipRepository.findById(requestId)
-                .orElseThrow(() -> new FriendshipException("A barátkérelem nem található."));
+                .orElseThrow(() -> new FriendshipException("Kérem nem található."));
 
-        if (!request.getReceiver().getId().equals(receiver.getId())) {
-            throw new FriendshipException("Nincs jogosultságod ezt a kérelmet kezelni.");
+        if (!request.getReceiver().equals(receiver)) {
+            throw new FriendshipException("Nincs jogosultságod ehhez a kérelemhez.");
         }
-        request.setStatus(FriendshipStatus.REJECTED);
-        friendshipRepository.save(request);
+        friendshipRepository.delete(request);
     }
     @Override
     @Transactional(readOnly = true)
@@ -141,5 +122,10 @@ public class FriendshipServiceImpl implements FriendshipService {
                 })
                 .distinct()
                 .collect(Collectors.toList());
+    }
+    @Override
+    @Transactional(readOnly = true)
+    public int countPendingRequests(UserEntity receiver) {
+        return friendshipRepository.countByReceiverAndStatus(receiver, FriendshipStatus.PENDING);
     }
 }

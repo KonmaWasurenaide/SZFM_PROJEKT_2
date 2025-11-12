@@ -1,5 +1,7 @@
 package com.ggames.GGames.Controller;
 
+import com.ggames.GGames.Data.Entity.UserEntity;
+import com.ggames.GGames.Service.FriendshipService;
 import com.ggames.GGames.Service.GameService;
 import com.ggames.GGames.Service.UserService;
 import com.ggames.GGames.Service.Dto.GameDto;
@@ -26,6 +28,7 @@ public class LibraryController {
     private final GameService gameService;
     private final UserService userService;
     private final ModelMapper modelMapper;
+    private final FriendshipService friendshipService;
 
 
     /**
@@ -75,7 +78,6 @@ public class LibraryController {
         }
 
         String username = authentication.getName();
-
         try {
             List<Long> ownedGameIds = userService.getUserOwnedGameIds(username);
             List<GameDto> libraryGames = gameService.getGamesByIds(ownedGameIds);
@@ -85,6 +87,19 @@ public class LibraryController {
             System.err.println("Database error loading library: " + e.getMessage());
             model.addAttribute("errorMessage", "Hiba történt a könyvtár betöltésekor.");
             model.addAttribute("games", List.of());
+        }
+
+        try {
+            UserEntity currentUser = userService.findByUsername(username)
+                    .orElseThrow(() -> new RuntimeException("Hitelesített felhasználó nem található."));
+
+            int pendingCount = friendshipService.countPendingRequests(currentUser);
+
+            model.addAttribute("pendingRequestCount", pendingCount);
+
+        } catch (Exception e) {
+            model.addAttribute("pendingRequestCount", 0);
+            System.err.println("Hiba a barátkérések számolása közben (Library): " + e.getMessage());
         }
 
         return "library";

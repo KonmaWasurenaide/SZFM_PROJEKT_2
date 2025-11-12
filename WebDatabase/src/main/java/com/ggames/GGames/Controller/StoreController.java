@@ -1,8 +1,14 @@
 package com.ggames.GGames.Controller;
 
+import com.ggames.GGames.Data.Entity.UserEntity;
+import com.ggames.GGames.Data.Repository.GameRepository;
+import com.ggames.GGames.Service.FriendshipService;
 import com.ggames.GGames.Service.GameService;
 import com.ggames.GGames.Service.Dto.GameDto;
+import com.ggames.GGames.Service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +29,8 @@ import java.util.regex.Pattern;
 public class StoreController {
 
     private final GameService gameService;
+    private final UserService userService;
+    private final FriendshipService friendshipService;
 
     private static final Pattern UNITY_ID_PATTERN = Pattern.compile("games/([0-9a-fA-F\\-]+)/");
 
@@ -50,8 +58,25 @@ public class StoreController {
      * @return A "home" nézet neve.
      */
     @GetMapping("/home")
-    public String homePage(Model model) {
+    public String homePage(Model model, @AuthenticationPrincipal UserDetails userDetails) {
         model.addAttribute("games", gameService.getAllGamesForDisplay());
+        if (userDetails != null) {
+            try {
+                UserEntity currentUser = userService.findByUsername(userDetails.getUsername())
+                        .orElseThrow(() -> new RuntimeException("Hitelesített felhasználó nem található."));
+
+                int pendingCount = friendshipService.countPendingRequests(currentUser);
+
+                model.addAttribute("pendingRequestCount", pendingCount);
+
+            } catch (Exception e) {
+                model.addAttribute("pendingRequestCount", 0);
+                System.err.println("Hiba a barátkérések számolása közben: " + e.getMessage());
+            }
+        } else {
+            model.addAttribute("pendingRequestCount", 0);
+        }
+
         return "home";
     }
 

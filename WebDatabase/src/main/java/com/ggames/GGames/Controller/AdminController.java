@@ -1,11 +1,16 @@
 package com.ggames.GGames.Controller;
 
 import com.ggames.GGames.Data.Entity.GameEntity;
+import com.ggames.GGames.Data.Entity.UserEntity;
+import com.ggames.GGames.Service.FriendshipService;
 import com.ggames.GGames.Service.GameService;
 import com.ggames.GGames.Service.Dto.GameDto;
+import com.ggames.GGames.Service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -26,6 +31,8 @@ public class AdminController {
 
     private final GameService gameService;
     private final ModelMapper modelMapper;
+    private final UserService userService;
+    private final FriendshipService friendshipService;
 
     /**
      * Megjeleníti az adminisztrátori panelt, amely tartalmazza az új játék hozzáadására szolgáló űrlapot
@@ -36,11 +43,29 @@ public class AdminController {
      */
     @GetMapping("/add-game")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public String showAdminPanel(Model model) {
+    public String showAdminPanel(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+
         if (!model.containsAttribute("game")) {
             model.addAttribute("game", new GameEntity());
         }
         model.addAttribute("games", gameService.getAllGamesForDisplay());
+
+        if (userDetails != null) {
+            try {
+                UserEntity currentUser = userService.findByUsername(userDetails.getUsername())
+                        .orElseThrow(() -> new RuntimeException("Hitelesített felhasználó nem található."));
+
+                int pendingCount = friendshipService.countPendingRequests(currentUser);
+
+                model.addAttribute("pendingRequestCount", pendingCount);
+
+            } catch (Exception e) {
+                model.addAttribute("pendingRequestCount", 0);
+                System.err.println("Hiba a barátkérések számolása közben (Admin Panel): " + e.getMessage());
+            }
+        } else {
+            model.addAttribute("pendingRequestCount", 0);
+        }
         return "admin/admin-games";
     }
 

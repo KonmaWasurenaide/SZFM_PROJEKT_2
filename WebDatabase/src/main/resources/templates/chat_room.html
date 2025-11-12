@@ -48,38 +48,35 @@
     const chatInput = document.getElementById('chatInput');
     const sendButton = document.getElementById('sendButton');
 
-    // 🟢 WebSocket kapcsolódás
     function connect() {
         console.log("🔌 WebSocket kapcsolat indítása...");
-        const socket = new SockJS('/ws'); // ez legyen a backendben is beállítva
+        const socket = new SockJS('/ws');
         stompClient = Stomp.over(socket);
 
         stompClient.connect({}, function (frame) {
-            console.log("✅ STOMP kapcsolat létrejött:", frame);
+            console.log("STOMP kapcsolat létrejött:", frame);
             sendButton.disabled = false;
             messagesContainer.innerHTML = '';
 
-            displaySystemMessage("Sikeresen csatlakozva a chathez ✅");
+            displaySystemMessage("Sikeresen csatlakozva a chathez");
 
-            // Feliratkozás a privát queue-ra
             stompClient.subscribe("/user/queue/messages", function (message) {
                 const msg = JSON.parse(message.body);
-                console.log("📩 Üzenet érkezett:", msg);
+                console.log("Üzenet érkezett:", msg);
                 showMessage(msg);
             });
 
         }, function (error) {
-            console.error("❌ STOMP hiba:", error);
-            displaySystemMessage("Hiba történt a kapcsolódás során ❌");
+            console.error("STOMP hiba:", error);
+            displaySystemMessage("Hiba történt a kapcsolódás során");
             sendButton.disabled = true;
         });
     }
 
-    // 💬 Üzenet küldése
     function sendMessage() {
         const text = chatInput.value.trim();
         if (!text || !stompClient || !stompClient.connected) {
-            console.warn("⚠️ Üzenet nem küldhető — nincs kapcsolat vagy üres üzenet.");
+            console.warn("Üzenet nem küldhető — nincs kapcsolat vagy üres üzenet.");
             return;
         }
 
@@ -89,14 +86,13 @@
             content: text
         };
 
-        console.log("📤 Üzenet küldése:", chatMessage);
+        console.log("Üzenet küldése:", chatMessage);
         stompClient.send("/app/chat", {}, JSON.stringify(chatMessage));
 
         chatInput.value = '';
         chatInput.focus();
     }
 
-    // 📜 Üzenet megjelenítése
     function showMessage(message) {
         const sender = message.senderUsername;
         const receiver = message.receiverUsername;
@@ -121,7 +117,6 @@
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
 
-    // ℹ️ Rendszerüzenet
     function displaySystemMessage(text) {
         const msg = document.createElement('div');
         msg.innerHTML = `<em>${text}</em>`;

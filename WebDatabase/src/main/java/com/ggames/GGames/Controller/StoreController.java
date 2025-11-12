@@ -87,7 +87,10 @@ public class StoreController {
      * @return A "game-details" nézet, vagy átirányítás hibával.
      */
     @GetMapping("/game/{gameName}")
-    public String gameDetailPage(@PathVariable String gameName, Model model) {
+    public String gameDetailPage(@PathVariable String gameName,
+                                 Model model,
+                                 @AuthenticationPrincipal UserDetails userDetails) {
+
         String decodedGameName = URLDecoder.decode(gameName, StandardCharsets.UTF_8);
         Optional<GameDto> gameOptional = gameService.getGameByName(decodedGameName);
 
@@ -96,6 +99,24 @@ public class StoreController {
         }
 
         model.addAttribute("game", gameOptional.get());
+
+        if (userDetails != null) {
+            try {
+                UserEntity currentUser = userService.findByUsername(userDetails.getUsername())
+                        .orElseThrow(() -> new RuntimeException("Hitelesített felhasználó nem található."));
+
+                int pendingCount = friendshipService.countPendingRequests(currentUser);
+
+                model.addAttribute("pendingRequestCount", pendingCount);
+
+            } catch (Exception e) {
+                model.addAttribute("pendingRequestCount", 0);
+                System.err.println("Hiba a barátkérések számolása közben (Game Details): " + e.getMessage());
+            }
+        } else {
+            model.addAttribute("pendingRequestCount", 0);
+        }
+
         return "game-details";
     }
 

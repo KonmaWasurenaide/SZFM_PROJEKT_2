@@ -14,18 +14,30 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * Kezeli a védett, bejelentkezést igénylő bináris erőforrások (pl. képek) kiszolgálását.
- * Ez a kontroller felelős a tartalomstreamelésért.
+ *
+ * <p>Ez a kontroller felelős a tartalomstreamelésért olyan erőforrások esetén, amelyek a Spring Security által védett elérési útvonalon találhatók.</p>
+ *
+ * @author [Ide írhatod az osztály szerzőjét]
+ * @since 1.0
  */
 @Controller
 @RequiredArgsConstructor
 public class ResourceController {
 
+    /**
+     * Erőforrásbetöltő segédosztály a fájlok eléréséhez, tipikusan a classpath-on belül.
+     */
     private final ResourceLoader resourceLoader;
 
     /**
      * Bináris képfolyamot szolgáltat egy VÉDETT mappából a bejelentkezett felhasználóknak.
+     *
+     * <p>A metódus ellenőrzi a felhasználó hitelesítését, megkeresi az erőforrást a {@code classpath:private/images/} mappában,
+     * és meghatározza a megfelelő {@code Content-Type} fejlécet.</p>
+     *
      * @param imageName A kért kép fájlneve.
-     * @return ResponseEntity<Resource> a kért erőforrással és a tartalomtípussal.
+     * @return {@code ResponseEntity<Resource>} a kért erőforrással és a tartalomtípussal (200 OK),
+     * vagy 404 NOT FOUND, illetve 500 INTERNAL SERVER ERROR státusszal.
      */
     @GetMapping("/protected-images/{imageName}")
     @PreAuthorize("isAuthenticated()")

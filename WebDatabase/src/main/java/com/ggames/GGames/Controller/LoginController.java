@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class LoginController {
 
-    private final UserService userService;
-
     @GetMapping("/login")
     public String loginPage() {
         return "login";

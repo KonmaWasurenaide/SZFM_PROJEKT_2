@@ -22,22 +22,44 @@ import java.util.regex.Pattern;
 
 /**
  * Kezeli a publikus áruház felületeit, a játékok listázását és a játék indítását.
- * Ez a kontroller felelős a böngészéshez szükséges nézetek kiszolgálásáért.
+ *
+ * <p>Ez a kontroller felelős a böngészéshez szükséges nézetek (főoldal, játékrészletek, játék indítása) kiszolgálásáért,
+ * valamint kezeli a bejelentkezett felhasználók függőben lévő barátkéréseinek számát.</p>
+ *
+ * @author [Ide írhatod az osztály szerzőjét]
+ * @since 1.0
  */
 @Controller
 @RequiredArgsConstructor
 public class StoreController {
 
+    /**
+     * Szolgáltatás a játékokkal kapcsolatos műveletek kezelésére.
+     */
     private final GameService gameService;
+
+    /**
+     * Szolgáltatás a felhasználói adatokkal kapcsolatos műveletek kezelésére.
+     */
     private final UserService userService;
+
+    /**
+     * Szolgáltatás a barátsági kapcsolatokkal kapcsolatos műveletek kezelésére.
+     */
     private final FriendshipService friendshipService;
 
+    /**
+     * Reguláris kifejezés a Unity Play URL-ből a játék azonosítójának kinyerésére.
+     */
     private static final Pattern UNITY_ID_PATTERN = Pattern.compile("games/([0-9a-fA-F\\-]+)/");
 
     /**
      * Segédmetódus a sima Unity URL átalakítására a beágyazási formátumra.
+     *
+     * <p>Kinyeri a játék egyedi azonosítóját az URL-ből, és létrehozza a Unity iframe beágyazási forrását.</p>
+     *
      * @param unityGameUrl A Unity Play játék URL-je.
-     * @return A beágyazáshoz szükséges iframe forrás URL.
+     * @return A beágyazáshoz szükséges iframe forrás URL, vagy az eredeti URL, ha az azonosító nem található.
      */
     private String convertUnityUrlToEmbed(String unityGameUrl) {
         if (unityGameUrl == null || unityGameUrl.isEmpty()) {
@@ -54,7 +76,11 @@ public class StoreController {
 
     /**
      * Megjeleníti a főoldalt és listázza az elérhető játékokat.
+     *
+     * <p>Bejelentkezett felhasználó esetén lekéri a függőben lévő barátkérések számát.</p>
+     *
      * @param model A Thymeleaf modell.
+     * @param userDetails A bejelentkezett felhasználó adatai (opcionális).
      * @return A "home" nézet neve.
      */
     @GetMapping("/home")
@@ -82,9 +108,13 @@ public class StoreController {
 
     /**
      * Megjeleníti egy adott játék részleteit a játék nevének felhasználásával.
-     * @param gameName A játék URL-kódolt neve.
+     *
+     * <p>URL-dekódolja a játék nevét a lekérdezés előtt. Bejelentkezett felhasználó esetén lekéri a függőben lévő barátkérések számát.</p>
+     *
+     * @param gameName A játék URL-kódolt neve (path variable).
      * @param model A Thymeleaf modell.
-     * @return A "game-details" nézet, vagy átirányítás hibával.
+     * @param userDetails A bejelentkezett felhasználó adatai (opcionális).
+     * @return A "game-details" nézet, vagy átirányítás a főoldalra, ha a játék nem található.
      */
     @GetMapping("/game/{gameName}")
     public String gameDetailPage(@PathVariable String gameName,
@@ -121,10 +151,13 @@ public class StoreController {
     }
 
     /**
-     * Megjeleníti a játék indító oldalt (az iframe-et tartalmazó nézetet).
-     * @param gameName A játék URL-kódolt neve.
+     * Megjeleníti a játék indító oldalt, amely beágyazza (iframe) a Unity Play linket.
+     *
+     * <p>Lekéri a játék adatait, átalakítja a lejátszási URL-t beágyazási formátumra, és azt adja át a nézetnek.</p>
+     *
+     * @param gameName A játék URL-kódolt neve (path variable).
      * @param model A Thymeleaf modell.
-     * @return A "game_play" nézet, vagy átirányítás hibával.
+     * @return A "game_play" nézet, vagy átirányítás a főoldalra, ha a játék nem található.
      */
     @GetMapping("/play/{gameName}")
     public String gamePlayPage(@PathVariable String gameName, Model model) {

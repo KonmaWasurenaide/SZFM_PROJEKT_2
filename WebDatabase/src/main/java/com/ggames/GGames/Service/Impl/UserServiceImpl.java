@@ -37,10 +37,20 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
 
+    /**
+     * Regex minta az erős jelszó ellenőrzésére.
+     * Követelmények: legalább 8 karakter, tartalmaznia kell számot, kisbetűt, nagybetűt és speciális karaktert.
+     */
     private static final String PASSWORD_PATTERN =
             "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?*~$^/|]).{8,}$";
     private static final Pattern pattern = Pattern.compile(PASSWORD_PATTERN);
 
+    /**
+     * Ellenőrzi, hogy a megadott jelszó megfelel-e az erősségi követelményeknek.
+     *
+     * @param password A vizsgálandó jelszó.
+     * @throws RuntimeException Ha a jelszó nem felel meg a {@code PASSWORD_PATTERN} feltételeinek.
+     */
     private void validatePasswordStrength(String password) {
         if (!pattern.matcher(password).matches()) {
             throw new RuntimeException(
@@ -62,11 +72,13 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Regisztrál egy új felhasználót, hasheli a jelszót, és ellenőrzi a felhasználónév egyediségét.
+     * Regisztrál egy új felhasználót, hasheli a jelszót, és ellenőrzi a felhasználónév és email egyediségét.
+     *
+     * <p>A jelszó mentése előtt ellenőrzi a jelszó erősségét és beállítja az alapértelmezett "USER" szerepkört.</p>
      *
      * @param userDto A regisztrációs adatátviteli objektum.
      * @return Az elmentett {@code UserEntity}.
-     * @throws RuntimeException Ha a felhasználónév már foglalt.
+     * @throws RuntimeException Ha a felhasználónév vagy az email cím már foglalt.
      */
     @Override
     @Transactional
@@ -93,6 +105,8 @@ public class UserServiceImpl implements UserService {
     /**
      * Hitelesíti a felhasználó belépési adatait.
      *
+     * <p>Megkeresi a felhasználót a bejelentkezési név alapján, majd összehasonlítja a megadott jelszót a hash-elt jelszóval a {@code PasswordEncoder} segítségével.</p>
+     *
      * @param username A felhasználónév.
      * @param password A jelszó (hash-elés előtti).
      * @return {@code true}, ha az adatok érvényesek; egyébként {@code false}.
@@ -107,7 +121,7 @@ public class UserServiceImpl implements UserService {
     /**
      * Hozzáad egy játékot a felhasználó könyvtárához, létrehozva a {@code DownloadEntity} bejegyzést.
      *
-     * <p>Ellenőrzi, hogy a játék már a könyvtárban van-e, és lekéri a szükséges {@code GameEntity}-t.</p>
+     * <p>A művelet csak akkor hajtódik végre, ha a játék létezik, és még nem szerepel a felhasználó könyvtárában.</p>
      *
      * @param username A felhasználó bejelentkezési neve.
      * @param gameId A könyvtárhoz adandó játék azonosítója.
@@ -122,7 +136,6 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new RuntimeException("Játék nem található: ID " + gameId));
 
         boolean alreadyDownloaded = downloadRepository.existsByUserAndGame(user, game);
-
 
         if (!alreadyDownloaded) {
             DownloadEntity downloadEntry = new DownloadEntity();
@@ -151,14 +164,29 @@ public class UserServiceImpl implements UserService {
                 .map(d -> d.getGame().getId())
                 .collect(Collectors.toList());
     }
+
+    /**
+     * Megkeres egy felhasználó entitást a bejelentkezési név alapján.
+     *
+     * @param username A keresett felhasználónév.
+     * @return Az opcionális {@code UserEntity} objektum.
+     */
     @Override
     @Transactional(readOnly = true)
     public Optional<UserEntity> findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
+
+    /**
+     * Megkeres egy felhasználó entitást az azonosítója alapján.
+     *
+     * @param id A keresett azonosító.
+     * @return Az opcionális {@code UserEntity} objektum.
+     */
     @Override
     @Transactional(readOnly = true)
     public Optional<UserEntity> findById(Long id) {
         return userRepository.findById(id);
     }
+
 }

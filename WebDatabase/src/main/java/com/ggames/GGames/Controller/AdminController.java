@@ -22,23 +22,41 @@ import java.util.Optional;
 /**
  * Kezeli az adminisztrátori felülethez kapcsolódó kéréseket, lehetővé téve a Játék CRUD (Create, Read, Update, Delete) műveleteket.
  *
- * <p>Minden metódus csak ADMIN jogosultsággal érhető el.</p>
+ * <p>Minden metódus csak ADMIN jogosultsággal érhető el a Spring Security {@code @PreAuthorize("hasAuthority('ROLE_ADMIN')")} annotációjával.</p>
  */
 @Controller
 @RequestMapping("/admin")
 @RequiredArgsConstructor
 public class AdminController {
 
+    /**
+     * Szolgáltatás a játékokkal kapcsolatos üzleti logikai műveletek kezelésére.
+     */
     private final GameService gameService;
+
+    /**
+     * Segédosztály az Entity és DTO objektumok közötti konverzióhoz.
+     */
     private final ModelMapper modelMapper;
+
+    /**
+     * Szolgáltatás a felhasználókkal kapcsolatos műveletek kezelésére.
+     */
     private final UserService userService;
+
+    /**
+     * Szolgáltatás a barátsági kapcsolatokkal kapcsolatos műveletek kezelésére, beleértve a függőben lévő kérések számlálását.
+     */
     private final FriendshipService friendshipService;
 
     /**
      * Megjeleníti az adminisztrátori panelt, amely tartalmazza az új játék hozzáadására szolgáló űrlapot
      * és a meglévő játékok listáját.
      *
-     * @param model A Thymeleaf modell.
+     * <p>Ezenkívül betölti a bejelentkezett felhasználó függőben lévő barátkéréseinek számát az értesítések megjelenítéséhez.</p>
+     *
+     * @param model A Thymeleaf modell, amelybe az adatokat beállítjuk (pl. játéklapok, {@code GameEntity} űrlaphoz).
+     * @param userDetails A Spring Security által injektált, bejelentkezett felhasználó adatai.
      * @return Az "admin/admin-games" nézet neve.
      */
     @GetMapping("/add-game")
@@ -72,11 +90,13 @@ public class AdminController {
     /**
      * Elmenti vagy frissíti a játékot az adatbázisban a kapott űrlapadatok alapján.
      *
+     * <p>A metódus elvégzi az űrlap validációját és hibakezelést is. Sikeres mentés esetén átirányít az adminisztrátori panelre.</p>
+     *
      * @param gameEntity A feltöltött vagy szerkesztett játék entitás.
      * @param bindingResult Az űrlap binding eredménye (validációhoz).
-     * @param model A Thymeleaf modell.
-     * @param redirectAttributes Az átirányítási attribútumok.
-     * @return Átirányítás az adminisztrátori panelre sikeres mentés esetén, vagy visszatérés az űrlaphoz hiba esetén.
+     * @param model A Thymeleaf modell, hibakezelésre is használva.
+     * @param redirectAttributes Az átirányítási attribútumok, üzenetek továbbítására.
+     * @return Átirányítás az adminisztrátori panelre sikeres mentés esetén ("redirect:/admin/add-game"), vagy visszatérés az űrlaphoz hiba esetén ("admin/admin-games").
      */
     @PostMapping("/save-game")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
@@ -109,10 +129,10 @@ public class AdminController {
     /**
      * Betölti a kiválasztott játékot a szerkesztő űrlapba az azonosító (ID) alapján.
      *
-     * @param id A szerkesztendő játék azonosítója.
-     * @param model A Thymeleaf modell.
-     * @param redirectAttributes Az átirányítási attribútumok.
-     * @return Visszatérés az "admin/admin-games" nézetre a kitöltött űrlappal.
+     * @param id A szerkesztendő játék egyedi azonosítója.
+     * @param model A Thymeleaf modell, amelybe a játékot beállítjuk.
+     * @param redirectAttributes Az átirányítási attribútumok, hibakezelésre használva.
+     * @return Visszatérés az "admin/admin-games" nézetre a kitöltött űrlappal, vagy átirányítás hibás ID esetén.
      */
     @GetMapping("/edit/{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
@@ -134,9 +154,11 @@ public class AdminController {
     /**
      * Törli a játékot az azonosító (ID) alapján.
      *
-     * @param id A törlendő játék azonosítója.
-     * @param redirectAttributes Az átirányítási attribútumok.
-     * @return Átirányítás az adminisztrátori panelre.
+     * <p>A műveletet tranzakciósan hajtja végre, majd átirányít az adminisztrátori panelre.</p>
+     *
+     * @param id A törlendő játék egyedi azonosítója.
+     * @param redirectAttributes Az átirányítási attribútumok, üzenetek továbbítására.
+     * @return Átirányítás az adminisztrátori panelre ("redirect:/admin/add-game").
      */
     @GetMapping("/delete/{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")

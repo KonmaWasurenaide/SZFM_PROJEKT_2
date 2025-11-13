@@ -6,12 +6,12 @@
     <title th:text="'Chat - ' + ${friendUsername}"></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- STOMP + SockJS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <meta name="friendId" th:content="${friendId}"/>
 
     <style>
         body { font-family: Arial, sans-serif; margin: 40px; background: #f5f5f5; }
@@ -31,7 +31,7 @@
 
 <div class="chat-container">
     <h2>Csevegés: <span th:text="${friendUsername}"></span></h2>
-    <div id="messages"><em>Kapcsolódás a chathez...</em></div>
+    <div id="messages"><em>Üzenetelőzmények betöltése...</em></div>
     <div>
         <input type="text" id="chatInput" placeholder="Írj üzenetet..." autocomplete="off">
         <button id="sendButton" onclick="sendMessage()" disabled>Küldés</button>
@@ -43,10 +43,58 @@
 
     const currentUserName = /*[[${#authentication.name}]]*/ 'guest';
     const currentFriendUsername = /*[[${friendUsername}]]*/ 'test';
+    // Partner ID lekérése a meta tagből (az API-hoz szükséges)
+    const partnerId = document.querySelector('meta[name="friendId"]').content;
 
     const messagesContainer = document.getElementById('messages');
     const chatInput = document.getElementById('chatInput');
     const sendButton = document.getElementById('sendButton');
+
+    // CSRF tokenek REST híváshoz (szükséges lehet POST/PUT/DELETE esetén)
+    const csrfToken = document.querySelector('meta[name="_csrf"]').content;
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
+
+
+    // 1. ASZINKRON FÜGGVÉNY AZ ELŐZMÉNYEK LEKÉRÉSÉRE
+    async function loadHistory() {
+        displaySystemMessage("Üzenetelőzmények betöltése...");
+
+        try {
+            // Hívás a ChatHistoryController REST végpontjára
+            const response = await fetch(`/api/chat/history/${partnerId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    [csrfHeader]: csrfToken // CSRF védett GET kéréshez
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP hiba! Státusz: ${response.status}`);
+            }
+
+            const historyMessages = await response.json();
+
+            messagesContainer.innerHTML = ''; // Üzenet: 'Üzenetelőzmények betöltése...' törlése
+
+            if (historyMessages.length === 0) {
+                displaySystemMessage("Nincs korábbi üzenet.");
+            } else {
+                displaySystemMessage(`Összesen ${historyMessages.length} üzenet betöltve.`);
+                historyMessages.forEach(msg => {
+                    // A showMessage függvény használata a betöltött előzmények megjelenítésére
+                    showMessage(msg);
+                });
+            }
+
+            return true; // Sikeres betöltés
+
+        } catch (error) {
+            console.error("Hiba az előzmények betöltésekor:", error);
+            displaySystemMessage("Hiba történt az üzenetelőzmények betöltésekor.");
+            return false; // Sikertelen betöltés
+        }
+    }
 
     function connect() {
         console.log("🔌 WebSocket kapcsolat indítása...");
@@ -56,8 +104,6 @@
         stompClient.connect({}, function (frame) {
             console.log("STOMP kapcsolat létrejött:", frame);
             sendButton.disabled = false;
-            messagesContainer.innerHTML = '';
-
             displaySystemMessage("Sikeresen csatlakozva a chathez");
 
             stompClient.subscribe("/user/queue/messages", function (message) {
@@ -83,7 +129,8 @@
         const chatMessage = {
             senderUsername: currentUserName,
             receiverUsername: currentFriendUsername,
-            content: text
+            content: text,
+            // Az ID-ket és timestamp-et a backend (ChatService) adja hozzá mentéskor.
         };
 
         console.log("Üzenet küldése:", chatMessage);
@@ -93,6 +140,7 @@
         chatInput.focus();
     }
 
+    // A showMessage függvény kicsit módosítva lett, hogy időt is mutasson, ha van
     function showMessage(message) {
         const sender = message.senderUsername;
         const receiver = message.receiverUsername;
@@ -101,7 +149,8 @@
         const isOutgoing = sender === currentUserName && receiver === currentFriendUsername;
 
         if (!isIncoming && !isOutgoing) {
-            console.log("⏭️ Nem releváns üzenet, kihagyva:", message);
+            // Ezt csak az élő üzeneteknél kéne kizárni, az előzményeknél a backend gondoskodik róla.
+            // De biztonsági okokból maradhat.
             return;
         }
 
@@ -110,7 +159,11 @@
 
         const bubble = document.createElement('div');
         bubble.classList.add('bubble');
-        bubble.innerHTML = `<strong>${sender}:</strong> ${message.content}`;
+
+        // Formázott idő megjelenítése, ha elérhető
+        const timestamp = message.timestamp ? new Date(message.timestamp).toLocaleTimeString() : '';
+
+        bubble.innerHTML = `<strong>${sender}:</strong> ${message.content} <span style="font-size: 0.7em; color: #888;">${timestamp}</span>`;
 
         msgDiv.appendChild(bubble);
         messagesContainer.appendChild(msgDiv);
@@ -129,7 +182,13 @@
         if (e.key === 'Enter') sendMessage();
     });
 
-    window.onload = connect;
+    // 2. Kapcsolat indítása az előzmények betöltése után
+    window.onload = async function() {
+        const historyLoaded = await loadHistory();
+        if (historyLoaded) {
+            connect();
+        }
+    };
 </script>
 
 </body>

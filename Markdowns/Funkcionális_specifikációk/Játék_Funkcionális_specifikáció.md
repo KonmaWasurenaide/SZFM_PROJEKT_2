@@ -23,7 +23,7 @@ A projekt tervezési szakaszban van. A fejlesztés még nem kezdődött el, de a
 ## 5. Üzleti folyamat modellje
 *(lásd követelményspecifikáció 5. pontját)*  
 
-## 6. Követelmlnylista
+## 6. Követelménylista
 *(lásd követelményspecifikáció 6. pontját)* 
 
 ## 7. Használati esetek 

@@ -1,7 +1,7 @@
 ### AWS konfiguráció
 
 80-as és 443-as portok meg vannak nyitva egy nginx service-nek, ami továbbítja ezeket a kéréseket a 8080-as portra
-A 8080-as portot figyeli egy springboot alkalmazás (Matyi), ami ubuntu service-ként van regisztrálva.
+A 8080-as portot figyeli egy springboot alkalmazás, ami ubuntu service-ként van regisztrálva.
 #### Springboot service
 - .jar helye: /opt/ggames/app.jar
 - Springboot updatelése: `sudo cp target/GGames-0.0.1-SNAPSHOT.jar /opt/ggames/app.jar`
@@ -25,4 +25,3 @@ A 8080-as portot figyeli egy springboot alkalmazás (Matyi), ami ubuntu service-
 
 #### troubleshooting
 - broken filelink in sites-enabled at nginx -- just remove it
-

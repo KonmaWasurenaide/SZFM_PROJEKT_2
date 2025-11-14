@@ -1,4 +1,4 @@
-# WEBAPP – FUNKCIONÁLIS SPECIFIKÁCIÓ
+# FUNKCIONÁLIS SPECIFIKÁCIÓ
 
 ## 1. Bevezetés
 A funkcionális specifikáció a webalapú játékáruház rendszert a felhasználó szemszögéből írja le. A követelményelemzésben azonosított üzleti folyamatok (böngészés, letöltés/indítás, barát- és chatfunkciók, adminisztráció) ezen dokumentumban konkrét funkciókká (menük, gombok, űrlapok, nézetek) és használati esetekké (use case) alakulnak.

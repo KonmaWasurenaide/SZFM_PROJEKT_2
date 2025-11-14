@@ -409,8 +409,6 @@
         <div class="game-details">
             <h1 th:text="${game.name}">[Játék Neve]</h1>
 
-            <p class="price" th:text="${#numbers.formatDecimal(game.price, 0, 'POINT', 0, 'COMMA')} + ' Ft'"></p>
-
             <div class="link-section">
                 <a th:href="@{'/download/' + ${game.id}}"
                    class="action-btn btn-download">

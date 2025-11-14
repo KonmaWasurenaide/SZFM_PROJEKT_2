@@ -449,8 +449,6 @@
 
                 <p style="font-size: 0.9rem; color: #555;" th:text="${game.description}"></p>
 
-                <p class="price" th:text="${#numbers.formatDecimal(game.price, 0, 'POINT', 0, 'COMMA')} + ' Ft'"></p>
-
                 <a th:href="@{'/download/' + ${game.id}}" class="add-to-cart-btn">
                     <i class="bi bi-cloud-arrow-down"></i> Könyvtárhoz adás
                 </a>

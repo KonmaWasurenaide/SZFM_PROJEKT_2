@@ -283,7 +283,7 @@
         th,td {
             border-bottom:1px solid var(--border-color);
             font-size:.9rem;
-            padding:12px 10px;
+            padding:12px 12px;
             word-wrap:break-word;
         }
         th {
@@ -450,12 +450,6 @@
                 <input id="name" th:field="*{name}" type="text" placeholder="Pl.: Elden Ring" required>
             </div>
         </div>
-        <div class="form-group">
-            <div>
-                <label for="price">Ár (price) - Ft</label>
-                <input id="price" th:field="*{price}" type="number" placeholder="Pl.: 18990" step="1">
-            </div>
-        </div>
 
         <div class="form-group">
             <div>
@@ -512,7 +506,6 @@
         <tr>
             <th class="col-id">ID</th>
             <th class="col-name">Név</th>
-            <th class="col-price">Ár (Ft)</th>
             <th class="col-dev">Fejlesztő</th>
             <th class="col-relase">Megjelenés</th>
             <th class="col-links">Linkek</th>
@@ -523,7 +516,6 @@
         <tr th:each="game : ${games}">
             <td th:text="${game.id}">1</td>
             <td th:text="${game.name}">Játék neve</td>
-            <td th:text="${#numbers.formatDecimal(game.price, 0, 'POINT', 0, 'COMMA') + ' Ft'}">18,990 Ft</td>
             <td th:text="${game.developer}">Fejlesztő</td>
             <td th:text="${#dates.format(game.relaseDate, 'yyyy. MM. dd.')}">2025.10.10.</td>
             <td class="col-links">

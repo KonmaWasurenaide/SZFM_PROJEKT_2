@@ -421,7 +421,9 @@
                    class="action-btn btn-play">
                     <i class="bi bi-controller"></i> Játék Indítása
                 </a>
+                <script type='text/javascript' src='https://storage.ko-fi.com/cdn/widget/Widget_2.js'></script><script type='text/javascript'>kofiwidget2.init('Donate if you like the game!', '#5d90e8', 'C0C51O84EB');kofiwidget2.draw();</script>
             </div>
+
 
             <div class="meta-data">
                 <p><strong>Fejlesztő:</strong> <span th:text="${game.developer}">Fejlesztő</span></p>
@@ -429,6 +431,7 @@
                 <p><strong>Megjelenés:</strong> <span th:text="${#dates.format(game.relaseDate, 'yyyy. MM. dd.')}">2025.01.01.</span></p>
                 <p><strong>Címkék:</strong> <span th:text="${game.tags}">RPG, Fantasy</span></p>
             </div>
+
         </div>
     </div>
 

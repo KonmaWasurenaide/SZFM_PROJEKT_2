@@ -21,7 +21,6 @@ A tervezés során meghatározásra kerültek:
 
 A következő lépés a részletes követelmények véglegesítése és a fejlesztési sprintterv kialakítása.
 
-
 ## 3. Vágyálomrendszer leírása
 - Egyszerűen használható, reszponzív és modern felhasználói felület.
 - Böngészhető és kereshető játéklista, kategóriákkal és leírásokkal.

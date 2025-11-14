@@ -10,8 +10,6 @@
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 
     <style>
-        /* ... A teljes CSS blokk ide jön a barátok oldalról ... */
-        /* --- 1. Alapvető Stílusok és Változók --- */
 
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
         :root {
@@ -39,8 +37,6 @@
             text-decoration: none;
         }
 
-        /* --- 2. Fejléc és Vezérlők --- */
-
         .top-header{
             background:var(--header-bg);
             padding:20px 40px;
@@ -67,7 +63,6 @@
             position: relative;
         }
 
-        /* --- 2.1 Értesítés Gomb --- */
         .notification-btn {
             background: none;
             border: 1px solid var(--border-color);
@@ -86,8 +81,6 @@
             background-color: var(--background-light);
             color: var(--primary-dark);
         }
-
-        /* --- 2.2 Dropdown Menü --- */
 
         .user-dropdown {
             position: relative;
@@ -184,8 +177,6 @@
             color: var(--error-color);
         }
 
-
-        /* --- 3. Tartalom (Alapok) --- */
         .main-content{
             max-width:1200px;
             margin:40px auto;
@@ -199,8 +190,6 @@
             color: var(--primary-dark);
         }
 
-
-        /* --- 4. Üzenetek --- */
         .message-box{
             padding:15px;
             margin-bottom:20px;
@@ -222,7 +211,6 @@
             border:1px solid #f5c6cb;
         }
 
-        /* --- 5. Értesítés Stílusok --- */
         .notification-list {
             list-style: none;
             padding: 0;
@@ -260,7 +248,6 @@
             font-size: 0.95rem;
         }
 
-        /* Kérelem Kezelés */
         .accept-btn {
             background: var(--primary-color);
             color: #fff;
@@ -283,7 +270,36 @@
             font-weight: 600;
         }
 
-        /* --- 6. Reszponzivitás --- */
+        .home-btn {
+            background: none;
+            color: var(--primary-dark);
+            padding: 10px 15px;
+            border: 1px solid var(--primary-dark);
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color .2s, color .2s, border-color .2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1rem;
+            line-height: 1;
+        }
+
+        .home-btn:hover {
+            background: var(--primary-dark);
+            color: var(--header-bg);
+            border-color: var(--primary-dark);
+        }
+
+        .home-btn i {
+            font-size: 1.1rem;
+            color: var(--primary-dark);
+            transition: color .2s;
+        }
+        .home-btn:hover i {
+            color: var(--header-bg);
+        }
 
         @media (max-width: 768px) {
             .top-header{ padding:15px 20px; }
@@ -296,6 +312,12 @@
             .action-buttons {
                 width: 100%;
                 justify-content: flex-start;
+            }
+            .home-btn {
+                padding: 8px 10px;
+            }
+            .home-btn span {
+                display: none;
             }
         }
         @media (max-width: 600px) {
@@ -311,7 +333,9 @@
 
 <div class="top-header">
     <div class="header-left">
-        <h1 class="site-title">KuspGames Játék Áruház</h1>
+        <a th:href="@{/home}" class="home-btn" title="Vissza a főoldalra">
+            <i class="bi bi-arrow-left"></i> Vissza az Áruházba
+        </a>
     </div>
 
     <div class="user-controls-container" sec:authorize="isAuthenticated()">
@@ -320,27 +344,37 @@
             <i class="bi bi-bell"></i>
         </a>
 
-        <div class="user-dropdown" id="userDropdownNotif">
-            <button class="dropdown-toggle" id="userMenuToggleNotif">
+        <div class="user-dropdown" id="userDropdown">
+            <button class="dropdown-toggle" id="userMenuToggle">
                 <i class="bi bi-person-circle"></i>
                 <span th:text="${#authentication.name}">USER</span>
                 <i class="bi bi-caret-down-fill"></i>
             </button>
 
-            <div class="dropdown-menu" id="userDropdownMenuNotif">
-                <a th:href="@{/friends}" class="dropdown-item">
-                    <i class="bi bi-people-fill"></i> Barátok & Keresés
+            <div class="dropdown-menu" id="userDropdownMenu">
+
+                <a th:href="@{/friends/list}" class="dropdown-item">
+                    <i class="bi bi-chat-dots-fill"></i> Barátaim és Chat
                 </a>
+
+                <a th:href="@{/friends}" class="dropdown-item">
+                    <i class="bi bi-people-fill"></i> Barátok Keresése
+                </a>
+
                 <div class="dropdown-divider"></div>
+
                 <a th:href="@{/library}" class="dropdown-item">
                     <i class="bi bi-book"></i> Saját Könyvtár
                 </a>
+
                 <div sec:authorize="hasAuthority('ROLE_ADMIN')">
                     <a th:href="@{/admin/add-game}" class="dropdown-item admin-item">
                         <i class="bi bi-gear"></i> Adminisztráció
                     </a>
                 </div>
+
                 <div class="dropdown-divider"></div>
+
                 <form th:action="@{/logout}" method="post" class="dropdown-item logout-form-item">
                     <button type="submit" class="logout-btn-dropdown">
                         <i class="bi bi-box-arrow-right"></i> Kijelentkezés
@@ -383,8 +417,8 @@
 
 <script th:inline="javascript">
     document.addEventListener('DOMContentLoaded', function() {
-        const toggleButton = document.getElementById('userMenuToggleNotif');
-        const userDropdown = document.getElementById('userDropdownNotif');
+        const toggleButton = document.getElementById('userMenuToggle');
+        const userDropdown = document.getElementById('userDropdown');
 
         if (toggleButton) {
             toggleButton.addEventListener('click', function() {
@@ -420,6 +454,10 @@
             .then(response => response.json().then(data => ({ ok: response.ok, data })))
             .then(result => {
                 statusMessageDiv.style.display = 'block';
+                setTimeout(() => {
+                    statusMessageDiv.style.display = 'none';
+                }, 3000);
+
                 if (result.ok) {
                     statusMessageDiv.className = 'message-box success';
                     statusMessageDiv.innerHTML = `<p>${result.data.message}</p>`;
@@ -430,13 +468,16 @@
                     }
                 } else {
                     statusMessageDiv.className = 'message-box error';
-                    statusMessageDiv.innerHTML = `<p>⚠️ Hiba: ${result.data.error || "Ismeretlen hiba."}</p>`;
+                    statusMessageDiv.innerHTML = `<p>Hiba: ${result.data.error || "Ismeretlen hiba."}</p>`;
                 }
             })
             .catch(error => {
                 statusMessageDiv.style.display = 'block';
+                setTimeout(() => {
+                    statusMessageDiv.style.display = 'none';
+                }, 5000);
                 statusMessageDiv.className = 'message-box error';
-                statusMessageDiv.innerHTML = '<p>⚠️ Hiba a kérés feldolgozásakor (Hálózati hiba).</p>';
+                statusMessageDiv.innerHTML = '<p>Hiba a kérés feldolgozásakor (Hálózati hiba).</p>';
             });
     }
 </script>

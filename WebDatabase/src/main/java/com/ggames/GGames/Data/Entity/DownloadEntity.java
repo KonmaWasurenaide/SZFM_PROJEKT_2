@@ -11,7 +11,8 @@ import java.time.LocalDate;
 /**
  * Entitás a felhasználói könyvtárban lévő játékok (letöltött tartalmak) tárolására.
  *
- * <p>Kapcsolótáblaként funkcionál, összekapcsolva a {@code UserEntity}-t és a {@code GameEntity}-t.</p>
+ * <p>Kapcsolótáblaként funkcionál, összekapcsolva a {@code UserEntity}-t és a {@code GameEntity}-t,
+ * ezzel reprezentálva, hogy egy adott felhasználó mely játékokat birtokolja.</p>
  */
 @Entity
 @Table(name = "downloaded")
@@ -21,13 +22,17 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class DownloadEntity {
 
+    /**
+     * A letöltés rekordjának egyedi azonosítója (elsődleges kulcs).
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
     /**
      * Hivatkozás a játékot letöltő felhasználóra.
-     * Kapcsolat: Több letöltés egy felhasználóhoz (Many-to-One).
+     * Kapcsolat: Több letöltés egy felhasználóhoz (Many-to-One). Nem lehet null értékű.
      */
     @ManyToOne()
     @JoinColumn(name = "user_id", nullable = false)
@@ -35,7 +40,7 @@ public class DownloadEntity {
 
     /**
      * Hivatkozás a felhasználó által birtokolt játékra.
-     * Kapcsolat: Több letöltés egy játékhoz (Many-to-One), mivel több felhasználó birtokolhatja ugyanazt a játékot.
+     * Kapcsolat: Több letöltés egy játékhoz (Many-to-One). Nem lehet null értékű.
      */
     @ManyToOne()
     @JoinColumn(name = "game_id", nullable = false)

@@ -1,9 +1,10 @@
 # KÖVETELMÉNYSPECIFIKÁCIÓ
 
 ## 1. Bevezetés
-A jelen dokumentum egy **webalapú játékáruház rendszer** (továbbiakban: a Rendszer) követelményeit, célját, működését és üzleti folyamatait írja le.  
-A Rendszer célja, hogy egy modern, biztonságos és felhasználóbarát online platformot biztosítson.
+A jelen dokumentum egy **webalapú játékáruház rendszer**  követelményeit, célját, működését és üzleti folyamatait írja le.  
+A Rendszer célja, hogy egy modern, biztonságos és felhasználóbarát online platformot biztosítson
 A rendszer célcsoportja minden olyan felhasználó, aki szeret digitális játékokat játszani vagy letölteni egy központi platformról, és közben közösségi interakciókat is folytatni.
+
 
 ## 2. Jelenlegi helyzet leírása
 A projekt jelenleg a **tervezési fázisban** tart, fejlesztés még nem kezdődött el.  
@@ -82,7 +83,7 @@ A rendszer működésére vonatkozóan nincs külön szabályozás, azonban az a
 | K-03 | Admin játék CRUD | Admin létrehozhat, törölhet és módosíthat játékokat. | Funkcionális | Magas | v0.2 |
 | K-04 | Játékböngészés | Felhasználók listázhatják a játékokat név, kategória alapján. | Funkcionális | Magas | v0.3 |
 | K-05 | Játék letöltése | Felhasználó letöltheti a játékot a helyi gépére. | Funkcionális | Magas | v0.4 |
-| K-06 | Online játékindítás | Bizonyos játékok böngészőben futtathatók. | Funkcionális | Közepes | v0.5 |
+| K-06 | Online játékindítás | A játékok böngészőben futtathatók. | Funkcionális | Közepes | v0.5 |
 | K-07 | Barátkérelem küldés | Felhasználó barátkérelmet küldhet másnak. | Funkcionális | Magas | v0.5 |
 | K-08 | Barátkérelem fogadása | Címzett elfogadhatja vagy elutasíthatja a kérelmet. | Funkcionális | Magas | v0.5 |
 | K-09 | Barátlista | A barátok megjelennek külön listában. | Funkcionális | Magas | v0.6 |

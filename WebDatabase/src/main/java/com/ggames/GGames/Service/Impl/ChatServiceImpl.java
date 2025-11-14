@@ -76,7 +76,6 @@ public class ChatServiceImpl implements ChatService {
                 .map(entity -> {
                     ChatMessageDto dto = modelMapper.map(entity, ChatMessageDto.class);
 
-                    // A model mapper nem tudja automatikusan leképezni az entitásból a felhasználóneveket
                     dto.setSenderUsername(entity.getSender().getUsername());
                     dto.setReceiverUsername(entity.getReceiver().getUsername());
 

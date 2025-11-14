@@ -73,9 +73,12 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                        .requestMatchers("/", "/home", "/register", "/login", "/game/**", "/play/**").permitAll()
+                        .requestMatchers("/", "/register", "/login").permitAll()
                         .requestMatchers("/ws/**").permitAll()
                         .requestMatchers(
+                                "/game/**",
+                                "/play/**",
+                                "/home",
                                 "/library/**",
                                 "/download/**",
                                 "/protected-images/**",

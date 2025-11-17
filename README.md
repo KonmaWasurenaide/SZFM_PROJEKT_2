@@ -12,6 +12,7 @@
 ## Elérés
 
 https://kusp.games
+- A játékok ezen az oldalon tölthetőek le
 
 ## Dokumentáció:
 

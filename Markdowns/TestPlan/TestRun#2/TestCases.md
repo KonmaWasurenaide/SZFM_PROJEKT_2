@@ -1,6 +1,6 @@
 ### Tesztelési adatok
 Tesztelő neve: Gábor Lili Zita
-Tesztelés dátuma: 2025.11.17
+Tesztelés dátuma: 2025.11.16
 Tesztelés kezdete: 18:15
 Tesztelés befejezte: 18:45
 Tesztelés eredménye: 10/9

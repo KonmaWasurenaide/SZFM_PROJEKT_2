@@ -1,5 +1,3 @@
----
-
 # **Útmutató a játék (Unity projekt) továbbfejlesztéséhez**
 
 Ha a fejlesztő csak a játékot szeretné folytatni a projektből, az alábbi lépések és mappák szükségesek.
@@ -81,4 +79,4 @@ A maintainer ezután el tudja bírálni és be tudja olvasztani.
 * Új modellek → `Assets/Models/`
 * Új scene → `Assets/Scenes/`
 
----
+

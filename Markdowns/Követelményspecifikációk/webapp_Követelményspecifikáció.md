@@ -92,7 +92,7 @@ A rendszer működésére vonatkozóan nincs külön szabályozás, azonban az a
 | K-12 | Profil szerkesztése | Felhasználók módosíthatják a profiljukat. | Funkcionális | Közepes | v0.7 |
 | K-13 | Admin felület | Admin külön panelen kezeli a játékokat. | Funkcionális | Magas | v0.7 |
 | K-14 | Biztonság | HTTPS, jelszó hash-elés, input validálás. | Nem funkcionális | Magas | v0.8 |
-| K-15 | Keresés | Keresés játékcím vagy kategória alapján. | Funkcionális | Közepes | v0.8 |
+| K-15 | Keresés | Keresés játékcím vagy kategória alapján. | Funkcionális | Közepes | v0.8.2 |
 | K-16 | Képkezelés | Játékhoz előnézeti kép feltöltése. | Funkcionális | Közepes | v0.9 |
 | K-17 | Reszponzív UI | Az oldal működjön mobilon és asztali gépen is. | Nem funkcionális | Magas | v1.0 |
 | K-18 | Sötét mód | A felhasználó válthat világos/sötét témát. | Nem funkcionális | Alacsony | v1.1 |
